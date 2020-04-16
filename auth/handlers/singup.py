@@ -18,11 +18,11 @@ def register_user():
 
     current_app.logger.info(f"Sing up for {email}")
 
-    status = Storage.add_user(email, password)
+    user_id, status = Storage.add_user(email, password)
     http_status = constants.responses[status]
 
     if status == constants.statuses["user"]["created"]:
-        body = dict(status=status, email=email)
+        body = dict(status=status, email=email, user_id=user_id)
     elif status == constants.statuses["user"]["invalidEmail"]:
         body = create_error(status, "email {{email}} is invalid", email=email)
     else:  # status == constants.statuses["user"]["emailUsed"]:

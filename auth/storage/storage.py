@@ -18,12 +18,12 @@ class Storage:
     def __init__(self):
         self._db = db
 
-    def add_user(self, email: str, password: str) -> STATUS:
+    def add_user(self, email: str, password: str) -> ID_WITH_STATUS:
         if not (email := check_email(email)):
-            return statuses["user"]["invalidEmail"]
+            return None, statuses["user"]["invalidEmail"]
 
         if self._has_email(email):
-            return statuses["user"]["emailUsed"]
+            return None, statuses["user"]["emailUsed"]
 
         user = User(email=email)
         user.set_password(password)
@@ -34,7 +34,7 @@ class Storage:
 
         self._send_confirm_message(user)
 
-        return statuses["user"]["created"]
+        return user.id, statuses["user"]["created"]
 
     def confirm_user(self, token: str):
         try:
