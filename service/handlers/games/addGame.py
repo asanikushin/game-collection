@@ -12,7 +12,7 @@ def add_game():
     new_id, status = Storage.add_game(**request.json)
     http_status = constants.responses[status]
 
-    if status == constants.statuses["game"]["created"]:
+    if status == constants.statuses["service"]["created"]:
         body = dict(id=new_id, status=status)
     else:
         body = create_error(status, "missing game data")

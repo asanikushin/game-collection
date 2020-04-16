@@ -3,17 +3,18 @@ from typing import Dict
 STATUS = int
 
 statuses: Dict[str, Dict[str, STATUS]] = {
-    "game": {
+    "service": {
         "created": 1,
         "modified": 2,
         "deleted": 3,
         "notExists": 4,
         "returned": 5,
         "missingData": 6,
-        "replacingID": 7,
+        "replacingData": 7,
     },
     "internal": {
         "correctModelData": 8,
+        "extraModelFields": 25,
     },
     "request": {
         "badArguments": 9,

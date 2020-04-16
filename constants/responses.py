@@ -5,13 +5,13 @@ import logging as __log
 RESPONSE = int
 
 responses: Dict[STATUS, RESPONSE] = {
-    statuses["game"]["created"]: 201,
-    statuses["game"]["modified"]: 202,
-    statuses["game"]["deleted"]: 200,
-    statuses["game"]["notExists"]: 404,
-    statuses["game"]["returned"]: 200,
-    statuses["game"]["missingData"]: 400,
-    statuses["game"]["replacingID"]: 403,
+    statuses["service"]["created"]: 201,
+    statuses["service"]["modified"]: 202,
+    statuses["service"]["deleted"]: 200,
+    statuses["service"]["notExists"]: 404,
+    statuses["service"]["returned"]: 200,
+    statuses["service"]["missingData"]: 400,
+    statuses["service"]["replacingData"]: 403,
 
     statuses["request"]["badArguments"]: 400,
 

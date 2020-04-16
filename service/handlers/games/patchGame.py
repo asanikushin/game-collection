@@ -13,12 +13,12 @@ def patch_game(prod_id=None):
     game, status = Storage.update_game(prod_id, request.method, **request.json)
     http_status = constants.responses[status]
 
-    if status == constants.statuses["game"]["modified"]:
+    if status == constants.statuses["service"]["modified"]:
         body = dict(game=game, status=status)
-    elif status == constants.statuses["game"]["notExists"]:
+    elif status == constants.statuses["service"]["notExists"]:
         body = create_error(status, "no such game id: {{ID}}", ID=prod_id)
-    elif status == constants.statuses["game"]["missingData"]:
+    elif status == constants.statuses["service"]["missingData"]:
         body = create_error(status, "missing game data")
-    else:  # status == constants.statuses["game"]["replacingID"]:
+    else:  # status == constants.statuses["service"]["replacingData"]:
         body = create_error(status, "replacing game ID")
     return jsonify(body), http_status
