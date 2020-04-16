@@ -17,47 +17,48 @@ class GameProcessor:
         options.update({"name": name})
         if "id" in options:
             del options["id"]
-        correct = check_model_options(Methods.POST, options, Game)
+        correct = check_model_options(Methods.POST, options, Game, service="game")
         if correct != statuses["internal"]["correctModelData"]:
             return None, correct
 
         game = Game(**options)
         self._db.session.add(game)
         self._db.session.commit()
-        return game.id, statuses["service"]["created"]
+        return game.id, statuses["game"]["created"]
 
     def get_game(self, game_id) -> GAME_WITH_STATUS:
         if (game := self._get_game(game_id)) is not None:
-            return game, statuses["service"]["returned"]
+            return game, statuses["game"]["returned"]
         else:
-            return None, statuses["service"]["notExists"]
+            return None, statuses["game"]["notExists"]
 
     def get_games(self, offset=0, count=None) -> GAMES_WITH_STATUS:
         query = self._db.session.query(Game).offset(offset)
         if count is not None:
             query = query.limit(count)
-        return query.all(), statuses["service"]["returned"]
+        return query.all(), statuses["game"]["returned"]
 
     def get_games_count(self) -> int:
         return self._db.session.query(Game).count()
 
-    def delete_game(self, game_id: ID_TYPE) -> GAME_WITH_STATUS:
+    def delete_game(self, game_id: GAME_ID_TYPE) -> GAME_WITH_STATUS:
         if (game := self._get_game(game_id)) is None:
-            return None, statuses["service"]["notExists"]
+            return None, statuses["game"]["notExists"]
         self._db.session.delete(game)
-        return game, statuses["service"]["deleted"]
+        self._db.session.commit()
+        return game, statuses["game"]["deleted"]
 
     def update_game(self, game_id, method="PATCH", **options) -> GAME_WITH_STATUS:
         if (game := self._get_game(game_id)) is None:
-            return None, statuses["service"]["notExists"]
+            return None, statuses["game"]["notExists"]
 
-        correct = check_model_options(getattr(Methods, method), options, Game, game)
+        correct = check_model_options(getattr(Methods, method), options, Game, game, service="game")
         if correct != statuses["internal"]["correctModelData"]:
             return None, correct
         old = copy.copy(game)
         game.values_update(**options)
         self._db.session.commit()
-        return old, statuses["service"]["modified"]
+        return old, statuses["game"]["modified"]
 
     @staticmethod
     def _get_game(game_id) -> GAME_TYPE:

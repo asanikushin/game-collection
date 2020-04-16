@@ -28,9 +28,10 @@ def create_app(config_class="service.config.DevelopmentConfig"):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from service.handlers import games
+    from service.handlers import games, rating
 
     app.register_blueprint(games, url_prefix="/games")
+    app.register_blueprint(rating, url_prefix="/rating")
 
     from service.middlewares.loggerMiddleware import LoggerMiddleware
     from service.middlewares.authMiddleware import AuthMiddleware
