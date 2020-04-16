@@ -37,6 +37,8 @@ class AuthMiddleware:
                                status=constants.common_responses["No auth"])
                 return res(environ, start_response)
             auth_email = auth.json()["value"]["email"]
+            user_id = auth.json()["value"]["user_id"]
             environ["user_email"] = auth_email
+            environ["user_id"] = user_id
 
         return self.app(environ, start_response)

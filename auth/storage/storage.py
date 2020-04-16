@@ -121,7 +121,7 @@ class Storage:
     def _create_tokens(email: str, session: Session, time=datetime.datetime.utcnow()):
         refresh_token = secrets.token_hex(64)
         access_token = str(jwt.encode(
-            {"email": email, "session": session.id,
+            {"email": email, "session": session.id, "user_id": session.userId,
              "exp": time + current_app.config["ACCESS_TOKEN_EXPIRATION"]},
             current_app.config["TOKENS_SECRET"]))[2:-1]
 
