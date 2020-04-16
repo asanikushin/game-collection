@@ -3,7 +3,7 @@ from typing import Dict
 STATUS = int
 
 statuses: Dict[str, Dict[str, STATUS]] = {
-    "service": {
+    "game": {
         "created": 1,
         "modified": 2,
         "deleted": 3,
@@ -11,6 +11,7 @@ statuses: Dict[str, Dict[str, STATUS]] = {
         "returned": 5,
         "missingData": 6,
         "replacingData": 7,
+        "extraFields": 34,
     },
     "internal": {
         "correctModelData": 8,
@@ -37,6 +38,16 @@ statuses: Dict[str, Dict[str, STATUS]] = {
         "accessOk": 19,
         "missingData": 20,
         "invalidToken": 21,
+    },
+    "rating": {
+        "created": 26,
+        "modified": 27,
+        "deleted": 28,
+        "missingData": 29,
+        "replacingData": 30,
+        "returned": 31,
+        "notExists": 32,
+        "extraFields": 33,
     }
 }
 
@@ -56,7 +67,7 @@ def _check_statuses():
         duplicate = dict()
         for status in bad:
             duplicate[status] = inverse_status[status]
-        raise RuntimeError(f"Duplicating status: {bad}: {duplicate}")
+        raise RuntimeError(f"Duplicating status: {bad}: {list(duplicate.items())}")
 
 
 _check_statuses()

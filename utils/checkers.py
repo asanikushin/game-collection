@@ -13,8 +13,7 @@ def check_keys(base: Dict, *keys, all=False) -> bool:
     return all
 
 
-# TODO add check for other fields
-def check_model_options(operation: Methods, options: Dict, cls, instance=object, service="service") -> STATUS:
+def check_model_options(operation: Methods, options: Dict, cls, instance=object, service="game") -> STATUS:
     must, other, constr = cls.get_fields()
     all_fields = set(must + other)
 

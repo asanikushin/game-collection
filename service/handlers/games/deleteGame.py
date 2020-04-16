@@ -13,7 +13,7 @@ def delete_game(prod_id=None):
     game, status = Storage.delete_game(prod_id)
     http_status = constants.responses[status]
 
-    if status == constants.statuses["service"]["deleted"]:
+    if status == constants.statuses["game"]["deleted"]:
         body = dict(game=game, status=status)
     else:
         body = create_error(status, "no such game id: {{ID}}", ID=prod_id)
