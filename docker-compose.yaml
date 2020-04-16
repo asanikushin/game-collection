@@ -1,0 +1,57 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_DB: shop
+      POSTGRES_PASSWORD: ue3um2yRJA
+
+  service:
+    build:
+      context: .
+      dockerfile: service/Dockerfile
+    links:
+      - auth
+    environment:
+      FLASK_ENV: config.ProductionConfig
+      SQLALCHEMY_DATABASE_URI: "postgresql://admin:ue3um2yRJA@db:5432/shop"
+      AUTH_URL: auth
+      AUTH_PORT: 5000
+    ports:
+      - 8081:8000
+
+  auth:
+    build:
+      context: .
+      dockerfile: auth/Dockerfile
+    environment:
+      FLASK_ENV: config.ProductionConfig
+      SQLALCHEMY_DATABASE_URI: "postgresql://admin:ue3um2yRJA@db:5432/shop"
+      REFRESH_TOKEN_EXPIRATION: "1H 30M"
+      RABBITMQ: rabbitmq
+      QUEUE: "notifications"
+      CONFIRM_URL: "http://localhost:8082"
+    ports:
+      - 8082:5000
+
+  notifications:
+    build:
+      context: .
+      dockerfile: notifications/Dockerfile
+    environment:
+      SMTP_URL: emailmock
+      RABBITMQ: rabbitmq
+      QUEUE: "notifications"
+      FROM_EMAIL: test@mock
+    depends_on:
+      - emailmock
+
+  emailmock:
+    build: mock-smtp
+    volumes:
+      - ./.emails:/var/lib/mock-smtp
+
+  rabbitmq:
+    image: rabbitmq:3-management
