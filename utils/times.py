@@ -7,7 +7,7 @@ def parse_timedelta(delta: typing.Optional[str]) -> typing.Optional[datetime.tim
         return None
     options = dict()
     for token in delta.split():
-        unit = token[-1]
+        unit = token[-1].upper()
         value = int(token[:-1])
         if unit == "S":
             options["seconds"] = value

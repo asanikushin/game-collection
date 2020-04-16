@@ -1,5 +1,5 @@
-from constants import STATUS, statuses
-from typing import Dict, Optional
+from constants import STATUS, statuses, Methods
+from typing import Dict, Optional, Union
 
 from validate_email import validate_email
 
@@ -13,27 +13,27 @@ def check_keys(base: Dict, *keys, all=False) -> bool:
     return all
 
 
-def check_model_options(operation: str, options: Dict, model=None) -> STATUS:
-    if operation == "create":
-        if check_keys(options, "name", "category"):
-            return statuses["internal"]["correctModelData"]
-        else:
-            return statuses["product"]["missingData"]
-    elif operation.lower() in ["patch"]:
-        opt_id = options.get("id", None)
-        if opt_id is None or model is None:
-            correct_id = True
-        else:
-            correct_id = (opt_id == model.id)
+# TODO add check for other fields
+def check_model_options(operation: Methods, options: Dict, cls, instance=object, service="service") -> STATUS:
+    must, other, constr = cls.get_fields()
+    all_fields = set(must + other)
 
-        if not correct_id:
-            return statuses["product"]["replacingID"]
-        if check_keys(options, "name", "category", all=False):
+    if len(set(options.keys()).difference(all_fields)) != 0:
+        return statuses[service]["extraFields"]
+
+    if operation == Methods.POST:
+        if check_keys(options, *must):
             return statuses["internal"]["correctModelData"]
         else:
-            return statuses["product"]["missingData"]
+            return statuses[service]["missingData"]
+    elif operation == Methods.PUT or operation == Methods.PATCH:
+        if instance:
+            for field in constr:
+                if (val := options.get(field, None)) is not None and val != getattr(instance, field):
+                    return statuses[service]["replacingData"]
+        return statuses["internal"]["correctModelData"]
     else:
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 def check_email(email: str) -> Optional[str]:

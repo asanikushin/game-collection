@@ -30,6 +30,7 @@ services:
       FLASK_ENV: config.ProductionConfig
       SQLALCHEMY_DATABASE_URI: "postgresql://admin:ue3um2yRJA@db:5432/shop"
       REFRESH_TOKEN_EXPIRATION: "1H 30M"
+      ACCESS_TOKEN_EXPIRATION: "30M"
       RABBITMQ: rabbitmq
       QUEUE: "notifications"
       CONFIRM_URL: "http://localhost:8082"
