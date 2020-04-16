@@ -5,9 +5,9 @@ from service.models.game import Game as _Game
 import typing
 
 ID_TYPE = typing.Optional[int]
-MODEL_TYPE = typing.Optional[_Game]
-MODELS_TYPE = typing.List[MODEL_TYPE]
+GAME_TYPE = typing.Optional[_Game]
+GAMES_TYPE = typing.List[GAME_TYPE]
 
 ID_WITH_STATUS = typing.Tuple[ID_TYPE, STATUS]
-MODEL_WITH_STATUS = typing.Tuple[MODEL_TYPE, STATUS]
-MODELS_WITH_STATUS = typing.Tuple[MODELS_TYPE, STATUS]
+GAME_WITH_STATUS = typing.Tuple[GAME_TYPE, STATUS]
+GAMES_WITH_STATUS = typing.Tuple[GAMES_TYPE, STATUS]
