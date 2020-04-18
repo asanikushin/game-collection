@@ -23,6 +23,9 @@ responses: Dict[STATUS, RESPONSE] = {
     statuses["user"]["invalidEmail"]: 400,
     statuses["user"]["notConfirmed"]: 400,
     statuses["user"]["confirmed"]: 200,
+    statuses["user"]["requestNotAllowed"]: 403,
+    statuses["user"]["unauthorized"]: 401,
+    statuses["user"]["roleChanged"]: 200,
 
     statuses["tokens"]["created"]: 201,
     statuses["tokens"]["noSuchToken"]: 404,

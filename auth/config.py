@@ -10,7 +10,8 @@ app_dir = os.path.abspath(os.path.dirname(__name__))
 class BaseConfig:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JSON_AS_ASCII = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(app_dir, 'auth.db')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI') or \
+                              'sqlite:///' + os.path.join(app_dir, 'auth.db')
 
     ACCESS_TOKEN_EXPIRATION = parse_timedelta(os.environ.get('ACCESS_TOKEN_EXPIRATION')) or datetime.timedelta(
         minutes=5)

@@ -7,7 +7,8 @@ app_dir = os.path.abspath(os.path.dirname(__name__))
 class BaseConfig:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JSON_AS_ASCII = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(app_dir, 'service.db')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI') or \
+                              'sqlite:///' + os.path.join(app_dir, 'service.db')
 
     AUTH_SERVICE_SCHEMA = os.environ.get('AUTH_SCHEMA') or 'http://'
     AUTH_SERVICE_URL = os.environ.get('AUTH_URL') or '127.0.0.1'

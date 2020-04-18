@@ -7,3 +7,9 @@ class Methods(Enum):
     DELETE = "DELETE"
     PUT = "PUT"
     PATCH = "PATCH"
+
+
+class UserRole(Enum):
+    ADMIN = "ADMIN"
+    BASE = "BASE"
+    DEFAULT = BASE

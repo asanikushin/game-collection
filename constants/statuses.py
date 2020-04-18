@@ -29,6 +29,9 @@ statuses: Dict[str, Dict[str, STATUS]] = {
         "invalidEmail": 22,
         "notConfirmed": 23,
         "confirmed": 24,
+        "requestNotAllowed": 35,
+        "unauthorized": 36,
+        "roleChanged": 37,
     },
     "tokens": {
         "created": 15,
