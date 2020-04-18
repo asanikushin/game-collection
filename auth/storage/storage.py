@@ -2,7 +2,7 @@ from .types import *
 
 from auth.models.users import User, Session
 from auth import db
-from constants import statuses
+from constants import statuses, UserRole
 from utils.checkers import check_email
 from utils.queues import send_message
 
@@ -87,10 +87,29 @@ class Storage:
         except jwt.DecodeError as err:
             return err, statuses["tokens"]["invalidToken"]
         session_id = value["session"]
-        session = Session.query.get(session_id)
+        session: Session = Session.query.get(session_id)
         if session is None:
             return "Related session was removed", statuses["tokens"]["invalidToken"]
-        return value, statuses["tokens"]["accessOk"]
+        user_id = session.userId
+        result = dict()
+        result["session"] = session.id
+        result["role"] = User.query.get(user_id).get_role()
+        result["user_id"] = user_id
+        result["email"] = value["email"]
+
+        return result, statuses["tokens"]["accessOk"]
+
+    def change_role(self, admin_token: TOKEN, user_id: ID_TYPE, role):
+        admin, status = self.check_token(admin_token)
+        if status != statuses["tokens"]["accessOk"]:
+            return statuses["tokens"]["invalidToken"]
+        if admin["role"] != UserRole.ADMIN.value:
+            return statuses["user"]["requestNotAllowed"]
+
+        user = User.query.get(user_id)
+        user.set_role(role)
+        self._db.session.commit()
+        return statuses["user"]["roleChanged"]
 
     @staticmethod
     def _has_email(email: str) -> bool:

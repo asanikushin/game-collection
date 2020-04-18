@@ -6,7 +6,6 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-
 import logging
 
 import os
@@ -39,7 +38,13 @@ def create_app(config_class="service.config.DevelopmentConfig"):
     log = logging.getLogger(app.name)
     log.setLevel(app.config["LOG_LEVEL"])
 
-    app.wsgi_app = AuthMiddleware(app.wsgi_app, app, log)
+    app.wsgi_app = AuthMiddleware(app.wsgi_app, app, log, (
+        ("/rating", "POST"),
+        ("/rating", "PUT"),
+        ("/rating", "PATCH"),
+        ("/rating", "DELETE"),
+    ))
+
     app.wsgi_app = LoggerMiddleware(app.wsgi_app, log)
 
     return app
