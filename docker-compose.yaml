@@ -32,7 +32,7 @@ services:
       FLASK_ENV: config.ProductionConfig
       SQLALCHEMY_DATABASE_URI: "postgresql://admin:ue3um2yRJA@db:5432/service"
       AUTH_URL: auth
-      AUTH_PORT: 5000
+      AUTH_PORT: 5001
     ports:
       - 8081:8000
 

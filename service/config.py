@@ -13,7 +13,7 @@ class BaseConfig:
     AUTH_SERVICE_SCHEMA = os.environ.get('AUTH_SCHEMA') or 'http://'
     AUTH_SERVICE_URL = os.environ.get('AUTH_URL') or '127.0.0.1'
     AUTH_SERVICE_PORT = os.environ.get('AUTH_PORT') or '5000'
-    AUTH_SERVICE_URI = AUTH_SERVICE_SCHEMA + AUTH_SERVICE_URL + ":" + AUTH_SERVICE_PORT
+    AUTH_SERVICE_URI = AUTH_SERVICE_URL + ":" + AUTH_SERVICE_PORT
 
     LOG_LEVEL = logging.DEBUG
 
