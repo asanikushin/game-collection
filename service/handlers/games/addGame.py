@@ -14,6 +14,10 @@ def add_game():
 
     if status == constants.statuses["game"]["created"]:
         body = dict(id=new_id, status=status)
-    else:
+    elif status == constants.statuses["game"]["missingData"]:
         body = create_error(status, "missing game data")
+    elif status == constants.statuses["game"]["extraFields"]:
+        body = create_error(status, "Extra fields in data")
+    else:  # status == constants.statuses["game"]["invalidData"]:
+        body = create_error(status, "Game data is invalid")
     return jsonify(body), http_status

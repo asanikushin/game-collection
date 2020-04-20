@@ -19,6 +19,10 @@ def patch_game(prod_id=None):
         body = create_error(status, "no such game id: {{ID}}", ID=prod_id)
     elif status == constants.statuses["game"]["missingData"]:
         body = create_error(status, "missing game data")
+    elif status == constants.statuses["game"]["extraFields"]:
+        body = create_error(status, "Extra fields in data")
+    elif status == constants.statuses["game"]["invalidData"]:
+        body = create_error(status, "Game data is invalid")
     else:  # status == constants.statuses["game"]["replacingData"]:
         body = create_error(status, "replacing game ID")
     return jsonify(body), http_status

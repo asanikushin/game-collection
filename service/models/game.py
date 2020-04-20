@@ -1,4 +1,5 @@
 from service import db
+from constants.statuses import statuses
 
 
 class Game(db.Model):
@@ -16,6 +17,25 @@ class Game(db.Model):
         self.category = options.get("category", self.category)
         self.min_players = options.get("min_players", self.min_players)
         self.max_players = options.get("max_players", self.max_players)
+
+    @staticmethod
+    def static_check(params):
+        min_pl = params.get("min_players")
+        max_pl = params.get("max_players")
+        if min_pl and min_pl < 0:
+            return statuses["game"]["invalidData"]
+        if min_pl is not None and max_pl is not None and min_pl > max_pl:
+            return statuses["game"]["invalidData"]
+        return statuses["internal"]["correctModelData"]
+
+    def data_check(self, params):
+        min_pl = params.get("min_players", self.min_players)
+        max_pl = params.get("max_players", self.max_players)
+        if min_pl and min_pl < 0:
+            return statuses["game"]["invalidData"]
+        if min_pl is not None and max_pl is not None and min_pl > max_pl:
+            return statuses["game"]["invalidData"]
+        return statuses["internal"]["correctModelData"]
 
     def get_dict(self):
         result = dict(id=self.id, name=self.name, category=self.category)

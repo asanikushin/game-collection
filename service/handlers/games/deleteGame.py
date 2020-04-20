@@ -23,7 +23,7 @@ def delete_game(prod_id=None):
 def delete_all_games():
     current_app.logger.info(f"Deleting all games by {request.environ['user_email']}")
 
-    game, status = Storage.delete_all_games()
+    count, status = Storage.delete_all_games()
     http_status = constants.responses[status]
 
-    return jsonify(dict(game=game, status=status)), http_status
+    return jsonify(dict(deleted=count, status=status)), http_status

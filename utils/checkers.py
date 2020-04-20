@@ -13,12 +13,21 @@ def check_keys(base: Dict, *keys, all=False) -> bool:
     return all
 
 
-def check_model_options(operation: Methods, options: Dict, cls, instance=object, service="game") -> STATUS:
+def check_model_options(operation: Methods, options: Dict, cls, instance: object = None, service="game") -> STATUS:
     must, other, constr = cls.get_fields()
     all_fields = set(must + other)
 
     if len(set(options.keys()).difference(all_fields)) != 0:
         return statuses[service]["extraFields"]
+
+    if callable(static_check := getattr(cls, "static_check", None)):
+        check = static_check(options)
+        if check != statuses["internal"]["correctModelData"]:
+            return check
+    if instance and callable(data_check := getattr(instance, "data_check", None)):
+        check = data_check(options)
+        if check != statuses["internal"]["correctModelData"]:
+            return check
 
     if operation == Methods.POST:
         if check_keys(options, *must):
