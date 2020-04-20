@@ -1,8 +1,11 @@
 from utils.errorResponse import create_error
 import constants
 
+from pb.auth_pb2 import ValidateRequest
+from pb.auth_pb2_grpc import AuthStub
+
 from werkzeug.wrappers import Request, Response
-import requests
+import grpc
 import json
 
 
@@ -12,6 +15,8 @@ class AuthMiddleware:
         self.base = base_app
         self.logger = logger
         self.allowed = allowed
+        self.rpc_connection = grpc.insecure_channel(self.base.config["AUTH_SERVICE_URI"])
+        self.validate_stub = AuthStub(self.rpc_connection)
 
     def __call__(self, environ, start_response):
         request = Request(environ, shallow=True)
@@ -28,25 +33,20 @@ class AuthMiddleware:
             return self.app(environ, start_response)
 
         self.logger.info("Auth request")
-        auth_url = self.base.config["AUTH_SERVICE_URI"] + "/validate"
-        self.logger.debug(auth_url)
 
-        auth = requests.post(auth_url, json={"token": request.headers["accessToken"]})
+        validate_request = ValidateRequest(access_token=access_token)
+        auth = self.validate_stub.Validate(validate_request)
 
-        self.logger.debug(str(auth.status_code) + str(auth.content))
-        auth_status = auth.json()["status"]
-
-        if auth_status != constants.statuses["tokens"]["accessOk"]:
-            auth_error = auth.json()["error"]
+        if auth.status != constants.statuses["tokens"]["accessOk"]:
             self.logger.warn("Access token is not OK")
-            res = Response(json.dumps(create_error(auth_status, auth_error)), mimetype="application/json",
+            res = Response(json.dumps(create_error(auth.status, auth.error)), mimetype="application/json",
                            status=constants.common_responses["No auth"])
             return res(environ, start_response)
-        auth_value = auth.json()["value"]
-        environ["user_email"] = auth_value["email"]
-        environ["user_id"] = auth_value["user_id"]
 
-        if self._is_allowed(request, environ, auth_value):
+        environ["user_email"] = auth.email
+        environ["user_id"] = auth.user_id
+
+        if self._is_allowed(request, environ, auth):
             return self.app(environ, start_response)
         else:
             self.logger.warn("User is not allowed to do this request")
@@ -55,11 +55,11 @@ class AuthMiddleware:
             res = Response(response, mimetype="application/json", status=constants.common_responses["No auth"])
             return res(environ, start_response)
 
-    def _is_allowed(self, request, environ, auth_value):
+    def _is_allowed(self, request, environ, auth):
         if request.method == "GET":
             self.logger.info("Get request with accessToken is always allowed")
             return True
-        if auth_value["role"] == constants.UserRole.ADMIN.value:
+        if auth.role == constants.UserRole.ADMIN.value:
             self.logger.info("Request for admin user is always allowed")
             return True
         path = request.path

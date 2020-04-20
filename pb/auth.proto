@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+message ValidateRequest {
+  // access token from user
+  string access_token = 1;
+}
+
+message ValidateResponse{
+  //request status
+  uint64 status = 1;
+
+  // user id
+  uint64 user_id = 2;
+  // user session id
+  uint64 session = 3;
+  //user role
+  string role = 4;
+  //user email
+  string email = 5;
+
+  //error value
+  string error = 6;
+}
+
+service Auth{
+  rpc Validate(ValidateRequest) returns (ValidateResponse);
+}
