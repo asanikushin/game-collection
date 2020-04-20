@@ -14,7 +14,7 @@ def confirm(token: str):
     http_status = constants.responses[status]
 
     if status == constants.statuses["user"]["confirmed"]:
-        body = dict(status=status)
+        body = dict(status=status, body=body)
     elif status == constants.statuses["tokens"]["invalidToken"]:
         body = create_error(status, "Access token has invalid format", error=body)
     return jsonify(body), http_status

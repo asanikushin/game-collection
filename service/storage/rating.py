@@ -8,7 +8,6 @@ from utils import check_model_options
 from constants import statuses, Methods
 
 from sqlalchemy import func
-import copy
 
 
 class RatingProcessor:
@@ -19,6 +18,8 @@ class RatingProcessor:
         correct = check_model_options(Methods.POST, parameters, Rating, service="rating")
         if correct != statuses["internal"]["correctModelData"]:
             return None, correct
+        if (previous := self._get_score(parameters["game_id"], parameters["user_id"])) is not None:
+            return self.update_score(parameters, "UPDATE")
         score = Rating(game_id=parameters["game_id"], user_id=parameters["user_id"], score=parameters["score"])
         self._db.session.add(score)
         self._db.session.commit()
@@ -45,8 +46,7 @@ class RatingProcessor:
     def get_game_rating(game_id: GAME_ID_TYPE) -> RATING_WITH_STATUS:
         val = Rating.query.with_entities(func.avg(Rating.score)).filter(Rating.game_id == game_id) \
             .group_by(Rating.game_id).first()
-        if val is not None:
-            val = val[0]
+        val = val[0] if val else 0
         return val, statuses["rating"]["returned"]
 
     @staticmethod
@@ -62,10 +62,9 @@ class RatingProcessor:
         correct = check_model_options(getattr(Methods, method), parameters, Rating, score, service="rating")
         if correct != statuses["internal"]["correctModelData"]:
             return None, correct
-        old = copy.copy(score)
         score.values_update(parameters)
         self._db.session.commit()
-        return old, statuses["rating"]["modified"]
+        return score, statuses["rating"]["modified"]
 
     @staticmethod
     def _get_score(game_id: GAME_ID_TYPE, user_id) -> Rating:

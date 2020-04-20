@@ -6,7 +6,6 @@ from constants import statuses, Methods
 from service.models import Game
 
 from service import db
-import copy
 
 
 class GameProcessor:
@@ -60,10 +59,9 @@ class GameProcessor:
         correct = check_model_options(getattr(Methods, method), options, Game, game, service="game")
         if correct != statuses["internal"]["correctModelData"]:
             return None, correct
-        old = copy.copy(game)
         game.values_update(**options)
         self._db.session.commit()
-        return old, statuses["game"]["modified"]
+        return game, statuses["game"]["modified"]
 
     @staticmethod
     def _get_game(game_id) -> GAME_TYPE:

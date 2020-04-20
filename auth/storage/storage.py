@@ -45,7 +45,7 @@ class Storage:
         user.confirmed = True
         self._db.session.commit()
 
-        return None, statuses["user"]["confirmed"]
+        return "Account confirmed", statuses["user"]["confirmed"]
 
     def create_session(self, email: str, password: str):
         if not (user := self._get_user(email)):

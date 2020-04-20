@@ -6,7 +6,7 @@ from utils import create_error
 from flask import jsonify, request, current_app
 
 
-def sing_in():
+def sign_in():
     try:
         email = request.json["email"]
         password = request.json["password"]
