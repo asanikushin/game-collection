@@ -16,6 +16,8 @@ def add_score():
 
     if status == constants.statuses["rating"]["created"]:
         body = dict(score=score, status=status)
-    else:
+    elif status == constants.statuses["rating"]["missingData"]:
         body = create_error(status, "missing score data")
+    else:  # status == constants.statuses["rating"]["invalidGameId"]:
+        body = create_error(status, "No game with such {{id}}", id=request.json.get('game_id'))
     return jsonify(body), http_status
