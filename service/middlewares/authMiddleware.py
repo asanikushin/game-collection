@@ -12,12 +12,12 @@ class AuthMiddleware:
         self.base = base_app
         self.logger = logger
         self.allowed = allowed
+        self.auth_method = "Bearer "
 
     def __call__(self, environ, start_response):
         request = Request(environ, shallow=True)
-        access_token = request.headers.get("accessToken")
 
-        if access_token is None:
+        if (authorization := request.headers.get("Authorization")) is None:
             if request.method in ["POST", "DELETE", "PUT", "PATCH"]:  # Modifying requests require accessToken
                 self.logger.warn("No token for auth")
                 res = Response(json.dumps(create_error(constants.statuses["user"]["unauthorized"],
@@ -26,12 +26,20 @@ class AuthMiddleware:
                                status=constants.common_responses["No auth"])
                 return res(environ, start_response)
             return self.app(environ, start_response)
+        elif type(authorization) != str or not authorization.startswith(self.auth_method):
+            self.logger.warn("Invalid Authorization method")
+            res = Response(json.dumps(create_error(constants.statuses["user"]["unauthorized"],
+                                                   "Invalid Authorization method")),
+                           mimetype="application/json",
+                           status=constants.common_responses["No auth"])
+            return res(environ, start_response)
 
         self.logger.info("Auth request")
         auth_url = self.base.config["AUTH_SERVICE_URI"] + "/validate"
         self.logger.debug(auth_url)
 
-        auth = requests.post(auth_url, json={"token": request.headers["accessToken"]})
+        access_token = authorization[len(self.auth_method):]
+        auth = requests.post(auth_url, json={"token": access_token})
 
         self.logger.debug(str(auth.status_code) + str(auth.content))
         auth_status = auth.json()["status"]
