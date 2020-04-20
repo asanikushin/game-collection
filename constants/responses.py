@@ -12,6 +12,7 @@ responses: Dict[STATUS, RESPONSE] = {
     statuses["game"]["missingData"]: 400,
     statuses["game"]["replacingData"]: 403,
     statuses["game"]["extraFields"]: 400,
+    statuses["game"]["invalidData"]: 400,
 
     statuses["request"]["badArguments"]: 400,
 
@@ -43,6 +44,8 @@ responses: Dict[STATUS, RESPONSE] = {
     statuses["rating"]["returned"]: 200,
     statuses["rating"]["notExists"]: 404,
     statuses["rating"]["extraFields"]: 400,
+    statuses["rating"]["invalidGameId"]: 400,
+    statuses["rating"]["invalidData"]: 400
 }
 
 common_responses: Dict[str, RESPONSE] = {

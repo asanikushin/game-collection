@@ -8,11 +8,12 @@ from flask import jsonify, request, current_app
 
 def change_role():
     current_app.logger.info("Make other user admin")
-    if (token := request.headers.get("accessToken")) is None:
+    if (token := request.headers.get("Authorization")) is None:
         status = constants.statuses["user"]["unauthorized"]
         body = create_error(status, "No token get")
         current_app.logger.warn("No token detected")
         return jsonify(body), constants.responses[status]
+    token = token.strip("Bearer ")
 
     if (user_id := request.json.get("user_id")) is None or (role := request.json.get("role")) is None:
         status = constants.statuses["user"]["missingData"]

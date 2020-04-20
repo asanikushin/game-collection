@@ -6,8 +6,14 @@ from utils import create_error
 from flask import jsonify, request, current_app
 
 
-def patch_score(game_id):
-    # TODO try for data from request
+def patch_score(game_id=None):
+    if game_id is None:
+        game_id = request.json.get("game_id")
+    if game_id is None:
+        status = constants.statuses["rating"]["missingData"]
+        http_status = constants.responses[status]
+        return jsonify(create_error(status, "missing score data")), http_status
+
     current_app.logger.info(f"Updating score by {request.environ['user_email']} and game id {game_id}")
 
     request.json["user_id"] = request.environ["user_id"]

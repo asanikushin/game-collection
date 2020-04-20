@@ -6,7 +6,6 @@ from constants import statuses, Methods
 from service.models import Game
 
 from service import db
-import copy
 
 
 class GameProcessor:
@@ -26,7 +25,7 @@ class GameProcessor:
         self._db.session.commit()
         return game.id, statuses["game"]["created"]
 
-    def get_game(self, game_id) -> GAME_WITH_STATUS:
+    def get_game(self, game_id: GAME_ID_TYPE) -> GAME_WITH_STATUS:
         if (game := self._get_game(game_id)) is not None:
             return game, statuses["game"]["returned"]
         else:
@@ -48,6 +47,11 @@ class GameProcessor:
         self._db.session.commit()
         return game, statuses["game"]["deleted"]
 
+    def delete_all_games(self) -> typing.Tuple[int, STATUS]:
+        rows_deleted = self._db.session.query(Game).delete()
+        self._db.session.commit()
+        return rows_deleted, statuses["game"]["deleted"]
+
     def update_game(self, game_id, method="PATCH", **options) -> GAME_WITH_STATUS:
         if (game := self._get_game(game_id)) is None:
             return None, statuses["game"]["notExists"]
@@ -55,10 +59,9 @@ class GameProcessor:
         correct = check_model_options(getattr(Methods, method), options, Game, game, service="game")
         if correct != statuses["internal"]["correctModelData"]:
             return None, correct
-        old = copy.copy(game)
         game.values_update(**options)
         self._db.session.commit()
-        return old, statuses["game"]["modified"]
+        return game, statuses["game"]["modified"]
 
     @staticmethod
     def _get_game(game_id) -> GAME_TYPE:

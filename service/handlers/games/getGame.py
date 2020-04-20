@@ -30,10 +30,11 @@ def get_games():
 def get_game(prod_id=None):
     prod_id = prod_id or request.args.get("id")
     game, status = Storage.get_game(prod_id)
+    rating, rt_status = Storage.get_game_rating(prod_id)
     http_status = constants.responses[status]
 
     if status == constants.statuses["game"]["returned"]:
-        body = dict(game=game, status=status)
+        body = dict(game=game, rating=rating, status=status)
     else:
         body = create_error(status, "no such game id: {{ID}}", ID=prod_id)
     return jsonify(body), http_status

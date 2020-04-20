@@ -21,7 +21,7 @@ def upgrade():
     op.create_table('rating',
     sa.Column('game_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('score', sa.Integer(), nullable=True),
+    sa.Column('score', sa.Float(), nullable=True),
     sa.PrimaryKeyConstraint('game_id', 'user_id')
     )
     # ### end Alembic commands ###

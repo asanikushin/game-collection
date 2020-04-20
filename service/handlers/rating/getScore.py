@@ -8,7 +8,10 @@ from flask import jsonify, request
 
 def get_user_scores(user_id=None):
     if user_id is None:
-        user_id = request.environ["user_id"]
+        user_id = request.environ.get("user_id")
+    if user_id is None:
+        return jsonify(create_error(constants.statuses["user"]["unauthorized"], "No token detected")), \
+               constants.common_responses["No auth"]
     scores, status = Storage.get_user_scores(user_id=user_id)
     http_status = constants.responses[status]
     return jsonify(scores=scores, status=status), http_status

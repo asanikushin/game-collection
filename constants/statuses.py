@@ -12,6 +12,7 @@ statuses: Dict[str, Dict[str, STATUS]] = {
         "missingData": 6,
         "replacingData": 7,
         "extraFields": 34,
+        "invalidData": 39,
     },
     "internal": {
         "correctModelData": 8,
@@ -51,6 +52,8 @@ statuses: Dict[str, Dict[str, STATUS]] = {
         "returned": 31,
         "notExists": 32,
         "extraFields": 33,
+        "invalidGameId": 38,
+        "invalidData": 40,
     }
 }
 
