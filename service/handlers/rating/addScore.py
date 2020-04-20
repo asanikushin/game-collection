@@ -1,4 +1,4 @@
-import constants
+from utils import constants
 from service.storage import Storage
 
 from utils import create_error
@@ -7,7 +7,6 @@ from flask import jsonify, request, current_app
 
 
 def add_score():
-    # TODO try for data from request
     current_app.logger.info(f"Add score to game {request.json.get('game_id')} by {request.environ['user_email']}")
 
     request.json["user_id"] = request.environ["user_id"]

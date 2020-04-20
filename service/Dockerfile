@@ -7,9 +7,7 @@ COPY service/config.py service/runner.py service/run.sh ./
 
 RUN chmod +x run.sh
 
-COPY pb pb
 COPY service/migrations migrations
 COPY utils utils
-COPY constants constants
 COPY service service
 ENTRYPOINT ["./run.sh"]

@@ -1,4 +1,4 @@
-from constants import STATUS
+from utils.constants import STATUS
 
 import typing
 

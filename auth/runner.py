@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 from auth import create_app, db
+
 from auth.fill_data import add_first_admin
 from auth.rpc_server import create_server
+
 from flask_script import Manager, Shell
 from flask_migrate import MigrateCommand
 

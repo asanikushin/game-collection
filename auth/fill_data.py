@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from auth.models.users import User
-from constants.enums import UserRole
+from utils.constants import UserRole
 
 import os
 

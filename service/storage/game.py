@@ -1,7 +1,7 @@
 from .types import *
 
 from utils import check_model_options
-from constants import statuses, Methods
+from utils.constants import statuses, Methods
 
 from service.models import Game
 

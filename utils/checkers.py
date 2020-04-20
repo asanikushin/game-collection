@@ -1,5 +1,5 @@
-from constants import STATUS, statuses, Methods
-from typing import Dict, Optional, Union
+from .constants import STATUS, statuses, Methods
+from typing import Dict, Optional
 
 from validate_email import validate_email
 

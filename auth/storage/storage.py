@@ -2,7 +2,7 @@ from .types import *
 
 from auth.models.users import User, Session
 from auth import db
-from constants import statuses, UserRole
+from utils.constants import statuses, UserRole
 from utils.checkers import check_email
 from utils.queues import send_message
 

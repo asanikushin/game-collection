@@ -1,7 +1,7 @@
 from auth.storage import Storage
-import pb.auth_pb2 as auth_pb2
-import pb.auth_pb2_grpc as auth_pb2_grpc
-import constants
+from utils.pb import auth_pb2
+from utils.pb import auth_pb2_grpc
+from utils import constants
 import grpc
 
 from concurrent import futures

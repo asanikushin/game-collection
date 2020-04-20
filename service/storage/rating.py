@@ -5,7 +5,7 @@ from service.models import Rating
 from service import db
 
 from utils import check_model_options
-from constants import statuses, Methods
+from utils.constants import statuses, Methods
 
 from sqlalchemy import func
 

@@ -1,5 +1,5 @@
 from auth import db
-from constants import UserRole
+from utils.constants import UserRole
 
 from werkzeug.security import generate_password_hash, check_password_hash
 

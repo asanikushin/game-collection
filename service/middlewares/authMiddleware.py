@@ -1,8 +1,8 @@
 from utils.errorResponse import create_error
-import constants
+from utils import constants
 
-from pb.auth_pb2 import ValidateRequest
-from pb.auth_pb2_grpc import AuthStub
+from utils.pb.auth_pb2 import ValidateRequest
+from utils.pb.auth_pb2_grpc import AuthStub
 
 from werkzeug.wrappers import Request, Response
 import grpc

@@ -4,7 +4,7 @@ from .game import GameProcessor
 from .rating import RatingProcessor
 
 from service import db
-from constants.statuses import statuses
+from utils.constants import statuses
 
 
 class Storage:

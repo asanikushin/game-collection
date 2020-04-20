@@ -1,4 +1,4 @@
-import constants
+from utils import constants
 from service.storage import Storage
 
 from utils import create_error
