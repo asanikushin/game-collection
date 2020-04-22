@@ -24,7 +24,9 @@ services:
   service:
     build:
       context: .
-      dockerfile: service/Dockerfile
+      dockerfile: Dockerfile-flask
+      args:
+        NAME: "service"
     links:
       - auth
       - db
@@ -39,7 +41,9 @@ services:
   auth:
     build:
       context: .
-      dockerfile: auth/Dockerfile
+      dockerfile: Dockerfile-flask
+      args:
+        NAME: "auth"
     links:
       - auth_db
     environment:
@@ -72,3 +76,4 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management
+

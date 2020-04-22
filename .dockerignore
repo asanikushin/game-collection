@@ -1,0 +1,13 @@
+Dockerfile
+docker-compose.yaml
+
+README.md
+
+.idea
+.git
+.gitignore
+.gitmodules
+
+auth-data
+service-data
+.emails

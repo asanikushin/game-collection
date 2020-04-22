@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bashg
 while true; do
     echo Migrating database
     flask db upgrade

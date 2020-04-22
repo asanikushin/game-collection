@@ -1,0 +1,18 @@
+FROM python:3.8-slim
+COPY requirements.txt /requirements.txt
+RUN python -m pip install --upgrade pip && pip install -r /requirements.txt
+
+COPY utils utils
+
+ARG NAME
+ENV FLASK_APP runner.py
+ENV SOURCE ${NAME}
+
+COPY ${SOURCE} ${SOURCE}
+COPY run-flask.sh ./
+
+RUN cp ${SOURCE}/config.py ./ && cp ${SOURCE}/runner.py ./ \
+    && chmod +x run-flask.sh \
+    && cp -R ${SOURCE}/migrations migrations
+
+ENTRYPOINT ["./run-flask.sh"]

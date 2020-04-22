@@ -75,7 +75,7 @@
 
 ## Установка и запуск
 Необходимо скачать репозиторий и подтянуть необходимые подмодули:
-```
+```shell script
 git clone --recursive https://github.com/asanikushin/game-collection.git
 ```
 Если уже склонировали репозиторий, то:
