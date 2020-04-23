@@ -30,11 +30,12 @@ services:
     links:
       - auth
       - db
+      - game-import
     environment:
       FLASK_ENV: config.ProductionConfig
       SQLALCHEMY_DATABASE_URI: "postgresql://admin:ue3um2yRJA@db:5432/service"
-      AUTH_URL: auth
-      AUTH_PORT: 5001
+      AUTH_GRPC: "auth:5001"
+      IMPORTER_GRPC: "game-import:5001"
       RABBITMQ: rabbitmq
       QUEUE: "importer"
     ports:
@@ -70,8 +71,7 @@ services:
     environment:
       FLASK_ENV: config.ProductionConfig
       RABBITMQ: rabbitmq
-      AUTH_URL: auth
-      AUTH_PORT: 5001
+      AUTH_GRPC: "auth:5001"
       QUEUE: "importer"
     ports:
       - 8083:8000

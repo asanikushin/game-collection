@@ -10,10 +10,8 @@ class BaseConfig:
     SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI') or \
                               'sqlite:///' + os.path.join(app_dir, 'importer.db')
 
-    AUTH_SERVICE_SCHEMA = os.environ.get('AUTH_SCHEMA') or 'http://'
-    AUTH_SERVICE_URL = os.environ.get('AUTH_URL') or '127.0.0.1'
-    AUTH_SERVICE_PORT = os.environ.get('AUTH_PORT') or '5000'
-    AUTH_SERVICE_URI = AUTH_SERVICE_URL + ":" + AUTH_SERVICE_PORT
+    AUTH_GRPC = os.environ.get('AUTH_GRPC') or 'localhost:5001'
+    IMPORTER_GRPC = os.environ.get('IMPORTER_GRPC') or 'localhost:5002'
 
     RABBITMQ = os.environ.get("RABBITMQ")
     QUEUE = os.environ.get("QUEUE")

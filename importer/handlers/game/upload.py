@@ -4,7 +4,6 @@ from importer.storage import Storage
 from utils.modelq import BatchElement, BatchList
 
 from flask import jsonify, request, current_app
-import csv
 import uuid
 
 BATCH_SIZE = 1000
@@ -16,13 +15,20 @@ def upload_file():
     file_id = uuid.uuid4()
     current_app.logger.info(f"process file {f.filename} {file_id}")
 
+    header = f.stream.readline().decode().strip().split(',')
+    current_app.logger.info(f"File header {header}")
+    indexes = [
+        header.index("name"),
+        header.index("categories"),
+        header.index("min_players"),
+        header.index("max_players"),
+    ]
+    current_app.logger.info(f"File indexes {indexes}")
+
     batch = BatchList()
     batch_list = []
-    header = f.stream.readline().decode().split(',')
-    indexes = [1, 3, 7, 5]
-
     for row in f.stream:
-        row = row.decode()
+        row = row.decode().strip()
         batch.add(BatchElement.from_row(row, indexes))
         if batch.size() == BATCH_SIZE:
             Storage.add_batch(batch, file_id)

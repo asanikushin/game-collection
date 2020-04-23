@@ -7,6 +7,7 @@ message ImportRequest {
 }
 
 message ImportResponse{
+  bool done = 1;
 }
 
 service Import{

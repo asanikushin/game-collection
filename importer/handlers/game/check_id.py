@@ -1,6 +1,5 @@
 from utils import constants
 from importer.storage import Storage
-
 from utils import create_error
 
 from flask import jsonify, request
@@ -25,7 +24,12 @@ def check_id():
         body = dict(batch=result)
     else:  # file
         result, status = Storage.file_status(file)
-        body = dict(file=result)
+        total = len(result)
+        loaded = 0
+        for batch in result:
+            if batch.loaded:
+                loaded += 1
+        body = dict(file=result, total=total, loaded=loaded)
 
     http_status = constants.responses[status]
     return jsonify(status=status, **body), http_status

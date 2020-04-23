@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\x15utils/pb/import.proto\"-\n\rImportRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\t\x12\x0e\n\x06loaded\x18\x02 \x01(\x08\"\x10\n\x0eImportResponse21\n\x06Import\x12\'\n\x04Load\x12\x0e.ImportRequest\x1a\x0f.ImportResponseb\x06proto3'
+  serialized_pb=b'\n\x15utils/pb/import.proto\"-\n\rImportRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\t\x12\x0e\n\x06loaded\x18\x02 \x01(\x08\"\x1e\n\x0eImportResponse\x12\x0c\n\x04\x64one\x18\x01 \x01(\x08\x32\x31\n\x06Import\x12\'\n\x04Load\x12\x0e.ImportRequest\x1a\x0f.ImportResponseb\x06proto3'
 )
 
 
@@ -69,6 +69,13 @@ _IMPORTRESPONSE = _descriptor.Descriptor(
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
+    _descriptor.FieldDescriptor(
+      name='done', full_name='ImportResponse.done', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -82,7 +89,7 @@ _IMPORTRESPONSE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=72,
-  serialized_end=88,
+  serialized_end=102,
 )
 
 DESCRIPTOR.message_types_by_name['ImportRequest'] = _IMPORTREQUEST
@@ -111,8 +118,8 @@ _IMPORT = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=90,
-  serialized_end=139,
+  serialized_start=104,
+  serialized_end=153,
   methods=[
   _descriptor.MethodDescriptor(
     name='Load',

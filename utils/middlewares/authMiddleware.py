@@ -18,7 +18,7 @@ class AuthMiddleware:
 
         self.auth_method = "Bearer "
 
-        self.rpc_connection = grpc.insecure_channel(self.base.config["AUTH_SERVICE_URI"])
+        self.rpc_connection = grpc.insecure_channel(self.base.config["AUTH_GRPC"])
         self.validate_stub = AuthStub(self.rpc_connection)
 
     def __call__(self, environ, start_response):
