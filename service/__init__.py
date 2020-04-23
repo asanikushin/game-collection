@@ -7,7 +7,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 import logging
-
 import os
 
 db = SQLAlchemy()
@@ -32,8 +31,8 @@ def create_app(config_class="service.config.DevelopmentConfig"):
     app.register_blueprint(games, url_prefix="/games")
     app.register_blueprint(rating, url_prefix="/rating")
 
-    from service.middlewares.loggerMiddleware import LoggerMiddleware
-    from service.middlewares.authMiddleware import AuthMiddleware
+    from utils.middlewares import LoggerMiddleware
+    from utils.middlewares import AuthMiddleware
 
     log = logging.getLogger(app.name)
     log.setLevel(app.config["LOG_LEVEL"])

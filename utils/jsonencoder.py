@@ -1,5 +1,6 @@
 from json import JSONEncoder
 import decimal
+import uuid
 
 
 class CustomJSONEncoder(JSONEncoder):
@@ -9,5 +10,7 @@ class CustomJSONEncoder(JSONEncoder):
         except AttributeError:
             pass
         if type(o) == decimal.Decimal:
+            return str(o)
+        if type(o) == uuid.UUID:
             return str(o)
         return o.__dict__

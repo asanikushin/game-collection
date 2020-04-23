@@ -15,6 +15,9 @@ class BaseConfig:
     AUTH_SERVICE_PORT = os.environ.get('AUTH_PORT') or '5000'
     AUTH_SERVICE_URI = AUTH_SERVICE_URL + ":" + AUTH_SERVICE_PORT
 
+    RABBITMQ = os.environ.get("RABBITMQ")
+    QUEUE = os.environ.get("QUEUE")
+
     LOG_LEVEL = logging.DEBUG
 
 

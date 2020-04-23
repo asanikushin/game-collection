@@ -54,6 +54,11 @@ statuses: Dict[str, Dict[str, STATUS]] = {
         "extraFields": 33,
         "invalidGameId": 38,
         "invalidData": 40,
+    },
+    "batch": {
+        "created": 41,
+        "notExists": 42,
+        "returned": 43,
     }
 }
 

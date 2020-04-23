@@ -4,7 +4,7 @@ from auth.models.users import User, Session
 from auth import db
 from utils.constants import statuses, UserRole
 from utils.checkers import check_email
-from utils.queues import send_message
+from utils.queues import wait_connection, send_message
 
 from flask import current_app
 
@@ -17,6 +17,7 @@ import datetime
 class Storage:
     def __init__(self):
         self._db = db
+        self._rabbit = None
 
     def add_user(self, email: str, password: str) -> ID_WITH_STATUS:
         if not (email := check_email(email)):
@@ -130,11 +131,13 @@ class Storage:
             current_app.config["TOKENS_SECRET"]))[2:-1]
         return f"{current_app.config['CONFIRM_URL']}/confirm/{token}"
 
-    @staticmethod
-    def _send_confirm_message(user: User):
-        send_message(current_app.config["RABBITMQ"], current_app.config["QUEUE"], json.dumps(
+    def _send_confirm_message(self, user: User):
+        if self._rabbit is None:
+            self._init_rabbit_connection()
+        send_message(self._rabbit, current_app.config["QUEUE"], json.dumps(
             dict(email=user.email, text=f"To confirm go to {Storage._create_confirm_link(user)}",
                  subject="Conformation email")))
+        self._rabbit = None
 
     @staticmethod
     def _create_tokens(email: str, session: Session, time=datetime.datetime.utcnow()):
@@ -160,3 +163,6 @@ class Storage:
     def _delete_session(self, session: Session):
         self._db.session.delete(session)
         self._db.session.commit()
+
+    def _init_rabbit_connection(self):
+        self._rabbit = wait_connection(current_app.config["RABBITMQ"], current_app.logger)

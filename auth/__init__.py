@@ -30,7 +30,11 @@ def create_app(config_class="auth.config.DevelopmentConfig"):
 
     app.register_blueprint(auth, url_prefix="/")
 
+    from utils.middlewares import LoggerMiddleware
+
     log = logging.getLogger(app.name)
     log.setLevel(app.config["LOG_LEVEL"])
+
+    app.wsgi_app = LoggerMiddleware(app.wsgi_app, log)
 
     return app

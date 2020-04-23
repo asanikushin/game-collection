@@ -5,6 +5,7 @@ from .rating import RatingProcessor
 
 from service import db
 from utils.constants import statuses
+from utils.modelq import BatchList
 
 
 class Storage:
@@ -38,6 +39,9 @@ class Storage:
 
     def update_game(self, game_id, method="PATCH", **options) -> GAME_WITH_STATUS:
         return self.game.update_game(game_id, method, **options)
+
+    def add_batch_list(self, batch: BatchList):
+        return self.game.add_batch_list(batch)
 
     # Rating handlers
     def add_score(self, params) -> RAT_WITH_STATUS:
