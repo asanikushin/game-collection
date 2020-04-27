@@ -1,4 +1,4 @@
-from utils.coders import parse_csv_row
+from utils.coders import parse_csv_row, my_int
 
 import typing
 from uuid import uuid4
@@ -16,8 +16,8 @@ class BatchElement:
         row = parse_csv_row(row)
         name = row[index[0]] if len(row) > index[0] else "No name"
         category = split[0] if len(row) > index[1] and (split := row[index[1]].split(" | ")) else "No category"
-        min_players = int(row[index[2]]) if len(row) > index[2] else 0
-        max_players = int(row[index[3]]) if len(row) > index[3] else 0
+        min_players = my_int(row[index[2]]) if len(row) > index[2] else 0
+        max_players = my_int(row[index[3]]) if len(row) > index[3] else 0
 
         return BatchElement(name, category, min_players, max_players)
 

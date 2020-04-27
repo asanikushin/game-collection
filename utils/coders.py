@@ -30,3 +30,9 @@ def parse_csv_row(row):
             cur += token
     result.append(cur)
     return result
+
+
+def my_int(val):
+    if val == "":
+        return 0
+    return int(val)
