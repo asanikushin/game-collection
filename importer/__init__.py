@@ -1,6 +1,6 @@
 from utils import CustomJSONEncoder
 
-import auth.config
+import importer.config
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -18,7 +18,7 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S')
 
 
-def create_app(config_class="auth.config.DevelopmentConfig"):
+def create_app(config_class="importer.config.DevelopmentConfig"):
     app = Flask(__name__)
     app.config.from_object(os.environ.get('FLASK_ENV') or config_class)
     app.json_encoder = CustomJSONEncoder
@@ -26,15 +26,17 @@ def create_app(config_class="auth.config.DevelopmentConfig"):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from auth.handlers import auth
+    from importer.handlers import game_file
 
-    app.register_blueprint(auth, url_prefix="/")
+    app.register_blueprint(game_file, url_prefix="/game")
 
     from utils.middlewares import LoggerMiddleware
+    from utils.middlewares import AuthMiddleware
 
     log = logging.getLogger(app.name)
     log.setLevel(app.config["LOG_LEVEL"])
 
+    app.wsgi_app = AuthMiddleware(app.wsgi_app, app, log)
     app.wsgi_app = LoggerMiddleware(app.wsgi_app, log)
 
     return app

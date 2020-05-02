@@ -30,11 +30,14 @@ services:
     links:
       - auth
       - db
+      - game-import
     environment:
       FLASK_ENV: config.ProductionConfig
       SQLALCHEMY_DATABASE_URI: "postgresql://admin:ue3um2yRJA@db:5432/service"
-      AUTH_URL: auth
-      AUTH_PORT: 5001
+      AUTH_GRPC: "auth:5001"
+      IMPORTER_GRPC: "game-import:5001"
+      RABBITMQ: rabbitmq
+      QUEUE: "importer"
     ports:
       - 8081:8000
 
@@ -55,7 +58,23 @@ services:
       QUEUE: "notifications"
       CONFIRM_URL: "http://localhost:8082"
     ports:
-      - 8082:5000
+      - 8082:8000
+
+  game-import:
+    build:
+      context: .
+      dockerfile: Dockerfile-flask
+      args:
+        NAME: "importer"
+    links:
+      - auth
+    environment:
+      FLASK_ENV: config.ProductionConfig
+      RABBITMQ: rabbitmq
+      AUTH_GRPC: "auth:5001"
+      QUEUE: "importer"
+    ports:
+      - 8083:8000
 
   notifications:
     build:
@@ -76,4 +95,6 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management
-
+    ports:
+    - 5672:5672
+    - 15672:15672

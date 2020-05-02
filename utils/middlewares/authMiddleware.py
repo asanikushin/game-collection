@@ -10,7 +10,7 @@ import json
 
 
 class AuthMiddleware:
-    def __init__(self, app, base_app, logger, allowed):
+    def __init__(self, app, base_app, logger, allowed=None):
         self.app = app
         self.base = base_app
         self.logger = logger
@@ -18,9 +18,8 @@ class AuthMiddleware:
 
         self.auth_method = "Bearer "
 
-        self.rpc_connection = grpc.insecure_channel(self.base.config["AUTH_SERVICE_URI"])
+        self.rpc_connection = grpc.insecure_channel(self.base.config["AUTH_GRPC"])
         self.validate_stub = AuthStub(self.rpc_connection)
-
 
     def __call__(self, environ, start_response):
         request = Request(environ, shallow=True)
@@ -43,7 +42,7 @@ class AuthMiddleware:
             return res(environ, start_response)
 
         self.logger.info("Auth request")
-        
+
         access_token = authorization[len(self.auth_method):]
         validate_request = ValidateRequest(access_token=access_token)
         auth = self.validate_stub.Validate(validate_request)
@@ -75,6 +74,8 @@ class AuthMiddleware:
             return True
         path = request.path
         method = request.method
+        if self.allowed is None:
+            return False
         for route in self.allowed:
             if method != route[1]:
                 continue

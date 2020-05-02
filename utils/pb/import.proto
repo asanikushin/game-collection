@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+message ImportRequest {
+  // access token from user
+  string uuid = 1;
+  bool loaded = 2;
+}
+
+message ImportResponse{
+  bool done = 1;
+}
+
+service Import{
+  rpc Load(ImportRequest) returns (ImportResponse);
+}
