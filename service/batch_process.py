@@ -1,5 +1,4 @@
 from service.storage import Storage
-from utils.modelq import BatchList, BatchElement
 import pickle
 
 

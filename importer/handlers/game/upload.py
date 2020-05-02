@@ -1,7 +1,7 @@
 from utils import constants
 from importer.storage import Storage
 
-from utils.modelq import BatchElement, BatchList
+from utils.queues.models import BatchElement, BatchList
 
 from flask import jsonify, request, current_app
 import uuid

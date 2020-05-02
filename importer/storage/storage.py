@@ -1,12 +1,9 @@
-from .types import *
-
 from importer import db
 from importer.models import Batch
 
 from utils.constants import statuses
 
-from utils.queues import wait_connection, send_message
-from utils.modelq import BatchList, BatchElement
+from utils import queues
 
 from flask import current_app
 import pickle
@@ -18,9 +15,9 @@ class Storage:
         self._rabbit = None
 
     def _init_rabbit_connection(self):
-        self._rabbit = wait_connection(current_app.config["RABBITMQ"], current_app.logger)
+        self._rabbit = queues.wait_connection(current_app.config["RABBITMQ"], current_app.logger)
 
-    def add_batch(self, data: BatchList, file_id):
+    def add_batch(self, data: queues.BatchList, file_id):
         batch = Batch(file_id=file_id)
         batch.batch_id = data.id
         batch.loaded = False
@@ -30,10 +27,10 @@ class Storage:
         self._db.session.commit()
         self.send_batch(data)
 
-    def send_batch(self, data: BatchList):
+    def send_batch(self, data: queues.BatchList):
         if self._rabbit is None:
             self._init_rabbit_connection()
-        send_message(self._rabbit, current_app.config["QUEUE"], pickle.dumps(data))
+        queues.send_message(self._rabbit, current_app.config["QUEUE"], pickle.dumps(data))
         self._rabbit = None
 
     def batch_status(self, batch_id):

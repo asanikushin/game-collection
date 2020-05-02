@@ -5,7 +5,7 @@ from .rating import RatingProcessor
 
 from service import db
 from utils.constants import statuses
-from utils.modelq import BatchList
+from utils.queues.models import BatchList
 
 
 class Storage:

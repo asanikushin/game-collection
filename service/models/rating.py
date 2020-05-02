@@ -3,7 +3,7 @@ from utils.constants import statuses
 
 
 class Rating(db.Model):
-    game_id = db.Column(db.Integer, primary_key=True)
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), primary_key=True)
     user_id = db.Column(db.Integer, primary_key=True)
     score = db.Column(db.FLOAT)
 

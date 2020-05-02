@@ -1,8 +1,8 @@
 from .types import *
 
 from utils import check_model_options
-from utils.constants import statuses, Methods
-from utils.modelq import BatchList
+from utils.constants import statuses, Methods, MAX_ELEMENT_COUNT
+from utils.queues.models import BatchList
 
 from utils.pb.import_pb2 import ImportRequest
 from utils.pb.import_pb2_grpc import ImportStub
@@ -45,8 +45,9 @@ class GameProcessor:
 
     def get_games(self, offset=0, count=None) -> GAMES_WITH_STATUS:
         query = self._db.session.query(Game).offset(offset)
-        if count is not None:
-            query = query.limit(count)
+        if count is None or count > MAX_ELEMENT_COUNT:
+            count = MAX_ELEMENT_COUNT
+        query = query.limit(count)
         return query.all(), statuses["game"]["returned"]
 
     def get_games_count(self) -> int:

@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-import os
 from service import create_app, db
 from service.batch_process import process
 
-from utils.queues import wait_connection
+from utils.queues.funcs import wait_connection
 
 from flask_script import Manager, Shell
 from flask_migrate import MigrateCommand
