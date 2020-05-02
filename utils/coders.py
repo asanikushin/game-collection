@@ -1,6 +1,7 @@
 from json import JSONEncoder
 import decimal
 import uuid
+from typing import List, Optional
 
 
 class CustomJSONEncoder(JSONEncoder):
@@ -16,7 +17,7 @@ class CustomJSONEncoder(JSONEncoder):
         return o.__dict__
 
 
-def parse_csv_row(row):
+def parse_csv_row(row: str) -> List:
     result = []
     cur = ""
     is_str = False
@@ -32,7 +33,7 @@ def parse_csv_row(row):
     return result
 
 
-def my_int(val):
-    if val == "":
+def my_int(val: Optional[str]) -> int:
+    if val is None or val == "":
         return 0
     return int(val)

@@ -1,7 +1,7 @@
 from utils import constants
 from importer.storage import Storage
 
-from utils.queues.models import BatchElement, BatchList
+from utils.queues.models import BatchElement, BatchList, Index
 
 from flask import jsonify, request, current_app
 import uuid
@@ -17,12 +17,7 @@ def upload_file():
 
     header = f.stream.readline().decode().strip().split(',')
     current_app.logger.info(f"File header {header}")
-    indexes = [
-        header.index("name"),
-        header.index("categories"),
-        header.index("min_players"),
-        header.index("max_players"),
-    ]
+    indexes = Index(header)
     current_app.logger.info(f"File indexes {indexes}")
 
     batch = BatchList()
