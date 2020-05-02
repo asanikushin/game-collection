@@ -8,16 +8,14 @@ import pytest
     ("id,name,year,categories,families,max_players,mechanics,min_players", Index(1, 3, 7, 5)),
     ("id,name,year,artists,categories,families,max_players,mechanics,min_age,min_players", Index(1, 4, 9, 6)),
 ])
-def test_index_parser(header, index):
-    value = Index.parse_from_header(header.split(","))
+def test_index_parser(header, index: Index):
+    value = Index.parse_from_header(header)
     assert value == index
 
 
 @pytest.mark.parametrize("row, element", [
-    ('307679,The Game of Billionaire,1973,Economic,,4,Auction/Bidding,2',
-     BatchElement('The Game of Billionaire', 'Economic', 2, 4)),
-    ('145,Metropolis,1984,City Building | Negotiation,Polyominoes,5,,2',
-     BatchElement("Metropolis", "City Building", 2, 5)),
+    ('307679,Billionaire,1973,Economic,,4,Auction/Bidding,2', BatchElement('Billionaire', 'Economic', 2, 4)),
+    ('145,Metropolis,1984,City Building | Negotiation,,5,,2', BatchElement("Metropolis", "City Building", 2, 5)),
     ('22044,ZIN,1994,Abstract Strategy', BatchElement("ZIN", "Abstract Strategy", 0, 0)),
     ('22044,ZIN,1994,Abstract Strategy,,,,4', BatchElement("ZIN", "Abstract Strategy", 4, 0)),
 ])

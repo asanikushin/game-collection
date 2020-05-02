@@ -23,7 +23,8 @@ class Index:
         return result
 
     @staticmethod
-    def parse_from_header(header: List):
+    def parse_from_header(header: str):
+        header = parse_csv_row(header)
         return Index(header.index("name"), header.index("categories"), header.index("min_players"),
                      header.index("max_players"))
 

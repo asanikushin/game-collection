@@ -2,6 +2,7 @@ from json import JSONEncoder
 import decimal
 import uuid
 from typing import List, Optional
+import datetime
 
 
 class CustomJSONEncoder(JSONEncoder):
@@ -37,3 +38,23 @@ def my_int(val: Optional[str]) -> int:
     if val is None or val == "":
         return 0
     return int(val)
+
+
+def parse_timedelta(delta: Optional[str]) -> Optional[datetime.timedelta]:
+    if delta is None:
+        return None
+    options = dict()
+    for token in delta.split():
+        unit = token[-1].upper()
+        value = int(token[:-1])
+        if unit == "S":
+            options["seconds"] = value
+        elif unit == "M":
+            options["minutes"] = value
+        elif unit == "H":
+            options["hours"] = value
+        elif unit == "W":
+            options["weeks"] = value
+        else:
+            raise ValueError("No such delta period")
+    return datetime.timedelta(**options)
