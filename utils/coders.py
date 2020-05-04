@@ -30,7 +30,8 @@ def parse_csv_row(row: str) -> List:
             is_str = not is_str
         else:
             cur += token
-    result.append(cur)
+    if len(result) != 0 or len(cur) != 0:
+        result.append(cur)
     return result
 
 
@@ -58,3 +59,14 @@ def parse_timedelta(delta: Optional[str]) -> Optional[datetime.timedelta]:
         else:
             raise ValueError("No such delta period")
     return datetime.timedelta(**options)
+
+
+def create_error_response(base, **options):
+    if len(options):
+        return dict(base=base, args=options)
+    else:
+        return dict(base=base)
+
+
+def create_error(status, base, **option):
+    return dict(error=create_error_response(base, **option), status=status)
