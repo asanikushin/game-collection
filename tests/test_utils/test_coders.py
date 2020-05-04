@@ -1,24 +1,46 @@
-from utils.coders import parse_timedelta, parse_csv_row
+from utils.coders import parse_timedelta, parse_csv_row, create_error_response
 import pytest
 from datetime import timedelta
 
 
-@pytest.mark.parametrize("delta, parsed", [
-    ("5W", timedelta(weeks=5)),
-    ("5m", timedelta(minutes=5)),
-    ("5M 3H 1S", timedelta(minutes=5, hours=3, seconds=1)),
-    pytest.param("5q", timedelta(weeks=5), marks=pytest.mark.xfail(strict=True))
-])
-def test_time_parser(delta, parsed):
-    value = parse_timedelta(delta)
-    assert value == parsed
+def test_time_parser():
+    value = parse_timedelta("5W")
+    assert value == timedelta(weeks=5)
+
+    value = parse_timedelta("5m")
+    assert value == timedelta(minutes=5)
+
+    value = parse_timedelta("5M 3H 1S")
+    assert value == timedelta(minutes=5, hours=3, seconds=1)
+
+    with pytest.raises(ValueError):
+        parse_timedelta("5q")
 
 
-@pytest.mark.parametrize("value, parsed", [
-    ("name,categories,min_players,max_players", ['name', 'categories', 'min_players', 'max_players']),
-    ("name,\"comma, row\"", ["name", "comma, row"]),
-    ("", [""])
-])
-def test_csv_parser(value, parsed):
-    result = parse_csv_row(value)
-    assert result == parsed
+def test_csv_parser():
+    value = parse_csv_row("name,categories,min_players,max_players")
+    assert value == ['name', 'categories', 'min_players', 'max_players']
+
+    value = parse_csv_row("name,\"comma, row\"")
+    assert value == ["name", "comma, row"]
+
+    value = parse_csv_row("value")
+    assert value == ["value"]
+
+    value = parse_csv_row(",")
+    assert value == ["", ""]
+
+    value = parse_csv_row("")
+    assert value == []
+
+
+def test_error_response():
+    assert len(create_error_response("base error")) == 1
+
+    error_with_arg = create_error_response("some base", arg1="first")
+    assert len(error_with_arg) == 2
+    assert len(error_with_arg["args"]) == 1
+
+    error_with_args = create_error_response("some base", arg1="first", arg2="second")
+    assert len(error_with_args) == 2
+    assert len(error_with_args["args"]) == 2

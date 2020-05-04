@@ -1,16 +1,17 @@
 from .constants import STATUS, statuses, Methods
-from typing import Dict, Optional
+from typing import Dict, Optional, List, Any
 
 from validate_email import validate_email
 
 
-def check_keys(base: Dict, *keys, all=False) -> bool:
-    for key in keys:
-        if key not in base and all:  # all keys in base
-            return False
-        if key in base and not all:  # any of keys in base
-            return True
-    return all
+def check_keys(base: Dict[str, Any], *keys, strict=True) -> bool:
+    keys = set(keys)
+    base = set(base.keys())
+    intersect = base.intersection(keys)
+    if strict:
+        return len(intersect) == len(keys)
+    else:
+        return intersect != set()
 
 
 def check_model_options(operation: Methods, options: Dict, cls, instance: object = None, service="game") -> STATUS:

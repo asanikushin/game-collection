@@ -1,5 +1,4 @@
-from utils.errorResponse import create_error
-from utils import constants
+from utils import constants, create_error
 
 from utils.pb.auth_pb2 import ValidateRequest
 from utils.pb.auth_pb2_grpc import AuthStub

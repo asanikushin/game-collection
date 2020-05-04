@@ -89,3 +89,6 @@ class BatchList:
     def clear(self):
         self.list: typing.List[BatchElement] = []
         self.id = uuid4()
+
+    def __eq__(self, other: "BatchList") -> bool:
+        return self.size() == other.size() and self.list == other.list
