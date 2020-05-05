@@ -15,6 +15,9 @@ class BaseConfig:
 
     RABBITMQ = os.environ.get("RABBITMQ")
     QUEUE = os.environ.get("QUEUE")
+
+    UPLOAD_FOLDER = os.environ.get("UPLOAD_FOLDER")
+
     LOG_LEVEL = logging.DEBUG
 
 

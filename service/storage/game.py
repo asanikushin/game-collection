@@ -4,25 +4,14 @@ from utils import check_model_options
 from utils.constants import statuses, Methods
 from utils.modelq import BatchList
 
-from utils.pb.import_pb2 import ImportRequest
-from utils.pb.import_pb2_grpc import ImportStub
-
 from service.models import Game
 
 from service import db
-from flask import current_app
-import grpc
 
 
 class GameProcessor:
     def __init__(self):
         self._db = db
-        self.rpc_connection = None
-        self.load_stub = None
-
-    def _init_rpc(self):
-        self.rpc_connection = grpc.insecure_channel(current_app.config["IMPORTER_GRPC"])
-        self.load_stub = ImportStub(self.rpc_connection)
 
     def add_game(self, name, **options) -> ID_WITH_STATUS:
         options.update({"name": name})
@@ -37,8 +26,9 @@ class GameProcessor:
         self._db.session.commit()
         return game.id, statuses["game"]["created"]
 
-    def get_game(self, game_id: GAME_ID_TYPE) -> GAME_WITH_STATUS:
-        if (game := self._get_game(game_id)) is not None:
+    @staticmethod
+    def get_game(game_id: GAME_ID_TYPE) -> GAME_WITH_STATUS:
+        if (game := GameProcessor._get_game(game_id)) is not None:
             return game, statuses["game"]["returned"]
         else:
             return None, statuses["game"]["notExists"]
@@ -80,11 +70,6 @@ class GameProcessor:
             game = Game(**element.get_dict())
             self._db.session.add(game)
         self._db.session.commit()
-
-        request = ImportRequest(uuid=str(batch.id), loaded=True)
-        if self.load_stub is None:
-            self._init_rpc()
-        self.load_stub.Load(request)
 
     @staticmethod
     def _get_game(game_id) -> GAME_TYPE:

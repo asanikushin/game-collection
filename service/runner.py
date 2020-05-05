@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
 from service import create_app, db
-from service.batch_process import process
+from service.process_importer import process_message
 
 from utils.queues import wait_connection
 
@@ -16,13 +16,17 @@ def make_shell_context():
 
 
 def callback(ch, method, properties, body):
-    app.logger.info(f"Body length: {len(body)}")
-    process(body)
+    app.logger.info(f"Message for file: {body}")
+    process_message(body.decode("utf-8"), app)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
-def run():
+def run_consuming():
     with app.app_context():
+        connection = wait_connection(app.config["RABBITMQ"], app.logger)
+        channel = connection.channel()
+        channel.queue_declare(queue=app.config["QUEUE"], durable=True)
+        channel.basic_consume(on_message_callback=callback, queue=app.config["QUEUE"])
         channel.start_consuming()
 
 
@@ -32,11 +36,7 @@ manager.add_command('shell', Shell(make_context=make_shell_context))
 manager.add_command('db', MigrateCommand)
 
 if __name__ == '__main__':
-    connection = wait_connection(app.config["RABBITMQ"], app.logger)
-    channel = connection.channel()
-    channel.queue_declare(queue=app.config["QUEUE"], durable=True)
-    channel.basic_consume(on_message_callback=callback, queue=app.config["QUEUE"])
-    rabbit = threading.Thread(target=run)
+    rabbit = threading.Thread(target=run_consuming)
     rabbit.start()
 
     manager.run()

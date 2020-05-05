@@ -38,8 +38,11 @@ services:
       IMPORTER_GRPC: "game-import:5001"
       RABBITMQ: rabbitmq
       QUEUE: "importer"
+      UPLOAD_FOLDER: "/tmp/files"
     ports:
       - 8081:8000
+    volumes:
+      - ./import-data:/tmp/files
 
   auth:
     build:
@@ -73,8 +76,11 @@ services:
       RABBITMQ: rabbitmq
       AUTH_GRPC: "auth:5001"
       QUEUE: "importer"
+      UPLOAD_FOLDER: "/tmp/files"
     ports:
       - 8083:8000
+    volumes:
+      - ./import-data:/tmp/files
 
   notifications:
     build:
@@ -96,5 +102,5 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     ports:
-    - 5672:5672
-    - 15672:15672
+      - 5672:5672
+      - 15672:15672
