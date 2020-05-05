@@ -1,11 +1,16 @@
 from .types import *
-
 from .game import GameProcessor
 from .rating import RatingProcessor
 
 from service import db
+
 from utils.constants import statuses
-from utils.queues.models import BatchList
+from utils.queues import BatchList
+from utils.pb.import_pb2 import ImportRequest
+from utils.pb.import_pb2_grpc import ImportStub
+
+from flask import current_app
+import grpc
 
 
 class Storage:
@@ -13,6 +18,13 @@ class Storage:
         self.game = game
         self.rating = rating
         self._db = db
+
+        self.rpc_connection = None
+        self.load_stub = None
+
+    def _init_rpc(self):
+        self.rpc_connection = grpc.insecure_channel(current_app.config["IMPORTER_GRPC"])
+        self.load_stub = ImportStub(self.rpc_connection)
 
     # Game handlers
     def add_game(self, name, **options) -> ID_WITH_STATUS:
@@ -40,8 +52,14 @@ class Storage:
     def update_game(self, game_id, method="PATCH", **options) -> GAME_WITH_STATUS:
         return self.game.update_game(game_id, method, **options)
 
-    def add_batch_list(self, batch: BatchList):
-        return self.game.add_batch_list(batch)
+    def add_batch_list(self, batch: BatchList, file_id, lines, loaded=False):
+        if batch is not None:
+            self.game.add_batch_list(batch)
+
+        request = ImportRequest(uuid=str(file_id), lines=lines, loaded=loaded)
+        if self.load_stub is None:
+            self._init_rpc()
+        self.load_stub.Load(request)
 
     # Rating handlers
     def add_score(self, params) -> RAT_WITH_STATUS:

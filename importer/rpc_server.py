@@ -10,7 +10,7 @@ import logging
 class ImportServicer(import_pb2_grpc.ImportServicer):
     def Load(self, request, context):
         with app.app_context():
-            Storage.set_batch_status(request.uuid, request.loaded)
+            Storage.set_file_status(request.uuid, request.lines, request.loaded)
         response = import_pb2.ImportResponse()
         response.done = True
         return response

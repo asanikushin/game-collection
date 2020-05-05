@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\x15utils/pb/import.proto\"-\n\rImportRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\t\x12\x0e\n\x06loaded\x18\x02 \x01(\x08\"\x1e\n\x0eImportResponse\x12\x0c\n\x04\x64one\x18\x01 \x01(\x08\x32\x31\n\x06Import\x12\'\n\x04Load\x12\x0e.ImportRequest\x1a\x0f.ImportResponseb\x06proto3'
+  serialized_pb=b'\n\x15utils/pb/import.proto\"<\n\rImportRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\t\x12\x0e\n\x06loaded\x18\x02 \x01(\x08\x12\r\n\x05lines\x18\x03 \x01(\x04\"\x1e\n\x0eImportResponse\x12\x0c\n\x04\x64one\x18\x01 \x01(\x08\x32\x31\n\x06Import\x12\'\n\x04Load\x12\x0e.ImportRequest\x1a\x0f.ImportResponseb\x06proto3'
 )
 
 
@@ -45,6 +45,13 @@ _IMPORTREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='lines', full_name='ImportRequest.lines', index=2,
+      number=3, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -58,7 +65,7 @@ _IMPORTREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=25,
-  serialized_end=70,
+  serialized_end=85,
 )
 
 
@@ -88,8 +95,8 @@ _IMPORTRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=72,
-  serialized_end=102,
+  serialized_start=87,
+  serialized_end=117,
 )
 
 DESCRIPTOR.message_types_by_name['ImportRequest'] = _IMPORTREQUEST
@@ -118,8 +125,8 @@ _IMPORT = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=104,
-  serialized_end=153,
+  serialized_start=119,
+  serialized_end=168,
   methods=[
   _descriptor.MethodDescriptor(
     name='Load',
