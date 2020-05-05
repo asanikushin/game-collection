@@ -22,6 +22,7 @@ def upgrade():
     sa.Column('game_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('score', sa.Float(), nullable=True),
+    sa.ForeignKeyConstraint(['game_id'], ['game.id'], ),
     sa.PrimaryKeyConstraint('game_id', 'user_id')
     )
     # ### end Alembic commands ###

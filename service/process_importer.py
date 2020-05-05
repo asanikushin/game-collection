@@ -1,5 +1,5 @@
 from service.storage import Storage
-from utils.modelq import BatchList, BatchElement
+from utils.queues.models import BatchList, BatchElement, Index
 
 import threading
 import os
@@ -15,14 +15,9 @@ def process_file(file_id: str, app):
     path = os.path.join(app.config["UPLOAD_FOLDER"], file_id)
     with open(path) as file:
         with app.app_context():
-            header = file.readline().strip().split(',')
+            header = file.readline().strip()
             app.logger.info(f"File {file_id} header {header}")
-            indexes = [
-                header.index("name"),
-                header.index("categories"),
-                header.index("min_players"),
-                header.index("max_players"),
-            ]
+            indexes = Index.parse_from_header(header)
             app.logger.info(f"File {file_id} indexes {indexes}")
 
             batch = BatchList()

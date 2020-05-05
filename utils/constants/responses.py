@@ -57,29 +57,3 @@ common_responses: Dict[str, RESPONSE] = {
     "No auth": 401,
     "Not found": 404,
 }
-
-
-def _check_responses(skip_statuses=None):
-    if skip_statuses is None:
-        skip_statuses = []
-    bad = []
-    all_keys = set(responses.keys())
-    for key, value in statuses.items():
-        if key in skip_statuses:
-            continue
-        for sub_key, status in value.items():
-            if status in all_keys:
-                all_keys.remove(status)
-            if (key, sub_key) in skip_statuses:
-                continue
-            if status not in responses:
-                bad.append((key, sub_key))
-
-    if len(all_keys) != 0:
-        __log.info(f"Responses have other keys {all_keys}")
-
-    if len(bad) != 0:
-        __log.error(f"Not all statuses have http-response {bad}")
-
-
-_check_responses(skip_statuses=["internal"])

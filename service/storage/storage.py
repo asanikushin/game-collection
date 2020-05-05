@@ -5,7 +5,7 @@ from .rating import RatingProcessor
 from service import db
 
 from utils.constants import statuses
-from utils.modelq import BatchList
+from utils.queues import BatchList
 from utils.pb.import_pb2 import ImportRequest
 from utils.pb.import_pb2_grpc import ImportStub
 

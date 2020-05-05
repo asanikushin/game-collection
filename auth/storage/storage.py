@@ -2,14 +2,16 @@ from .types import *
 
 from auth.models.users import User, Session
 from auth import db
+
 from utils.constants import statuses, UserRole
 from utils.checkers import check_email
-from utils.queues import wait_connection, send_message
+from utils.queues.funcs import wait_connection, send_message
+from utils.queues.models import Email
 
 from flask import current_app
 
 import jwt
-import json
+import pickle
 import secrets
 import datetime
 
@@ -134,9 +136,8 @@ class Storage:
     def _send_confirm_message(self, user: User):
         if self._rabbit is None:
             self._init_rabbit_connection()
-        send_message(self._rabbit, current_app.config["QUEUE"], json.dumps(
-            dict(email=user.email, text=f"To confirm go to {Storage._create_confirm_link(user)}",
-                 subject="Conformation email")))
+        email = Email(user.email, "Conformation email", f"To confirm go to {Storage._create_confirm_link(user)}")
+        send_message(self._rabbit, current_app.config["QUEUE"], pickle.dumps(email))
         self._rabbit = None
 
     @staticmethod

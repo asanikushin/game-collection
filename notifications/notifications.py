@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
 
-from notifications import BaseConfig
-from notifications import send_email
-import utils
+from notifications import BaseConfig, send_email
+
+from utils.queues import Email, wait_connection
 
 import pika
 
 import logging
-import json
+import pickle
 import socket
 
 
 def callback(ch, method, properties, body):
     logging.debug(" [x] Received %r" % (body,))
     logging.info(" [x] Received")
-    data = json.loads(body)
+    data: Email = pickle.loads(body)
     try:
-        send_email(address=data["email"], message=data["text"], subject=data["subject"])
+        send_email(address=data.email, message=data.message, subject=data.subject)
     except socket.gaierror:
         logging.error(" [o] Error while sending email")
         return
@@ -32,7 +32,7 @@ logging.basicConfig(
 
 logging.info(__name__)
 logging.info("Start connecting")
-connection: pika.connection = utils.wait_connection(BaseConfig.RABBITMQ, logging)
+connection: pika.connection = wait_connection(BaseConfig.RABBITMQ, logging)
 
 logging.info(BaseConfig.QUEUE)
 channel = connection.channel()

@@ -4,7 +4,7 @@ from utils.constants import statuses
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), index=True, unique=True)
+    name = db.Column(db.String(64), index=True)
     category = db.Column(db.String(64), index=True)
     min_players = db.Column(db.Integer, nullable=True)
     max_players = db.Column(db.Integer, nullable=True)

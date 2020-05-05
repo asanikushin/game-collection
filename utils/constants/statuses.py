@@ -61,24 +61,3 @@ statuses: Dict[str, Dict[str, STATUS]] = {
         "returned": 43,
     }
 }
-
-
-def _check_statuses():
-    inverse_status = dict()
-    bad = set()
-    for key, value in statuses.items():
-        for sub_key, status in value.items():
-            old = []
-            if status in inverse_status:
-                bad.add(status)
-                old = inverse_status[status]
-            inverse_status[status] = old + [(key, sub_key)]
-
-    if len(bad) != 0:
-        duplicate = dict()
-        for status in bad:
-            duplicate[status] = inverse_status[status]
-        raise RuntimeError(f"Duplicating status: {bad}: {list(duplicate.items())}")
-
-
-_check_statuses()

@@ -1,5 +1,3 @@
-from .types import *
-
 from importer import db
 from importer.models import Batch
 
@@ -24,6 +22,7 @@ class Storage:
         file.lines = 0
 
         self._db.session.commit()
+
         self.send_file(file_id)
         return statuses["batch"]["created"]
 

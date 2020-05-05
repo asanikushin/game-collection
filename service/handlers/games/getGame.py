@@ -1,7 +1,5 @@
-from utils import constants
+from utils import constants, create_error
 from service.storage import Storage
-
-from utils import create_error
 
 from flask import jsonify, request
 
@@ -21,8 +19,9 @@ def get_games():
     games, status = Storage.get_games(**options)
     http_status = constants.responses[status]
     total_count = Storage.get_games_count()
-    if len(options) != 0:
-        options["count"] = len(games)
+    count = len(games)
+    if len(options) != 0 or count != total_count:
+        options["count"] = count
         options["offset"] = options.get("offset", 0)
     return jsonify(games=games, total_count=total_count, status=status, **options), http_status
 

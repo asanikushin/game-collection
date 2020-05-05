@@ -1,4 +1,4 @@
-from utils.times import parse_timedelta
+from utils.coders import parse_timedelta
 
 import datetime
 import logging

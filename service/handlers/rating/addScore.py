@@ -1,7 +1,5 @@
-from utils import constants
+from utils import constants, create_error
 from service.storage import Storage
-
-from utils import create_error
 
 from flask import jsonify, request, current_app
 
