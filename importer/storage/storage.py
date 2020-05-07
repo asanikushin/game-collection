@@ -16,14 +16,14 @@ class Storage:
     def _init_rabbit_connection(self):
         self._rabbit = wait_connection(current_app.config["RABBITMQ"], current_app.logger)
 
-    def add_file(self, file_id):
+    def add_file(self, file_id, extension=""):
         file = self._add_file(file_id)
         file.loaded = False
         file.lines = 0
 
         self._db.session.commit()
 
-        self.send_file(file_id)
+        self.send_file(str(file_id)+extension)
         return statuses["batch"]["created"]
 
     @staticmethod
@@ -37,7 +37,7 @@ class Storage:
         if (file := self._get_file(file_id)) is None:
             file = self._add_file(file_id)
         file.loaded = loaded or file.loaded
-        file.lines = max(lines, file.lines)
+        file.lines = max(lines or 0, file.lines or 0)
         self._db.session.commit()
 
     def send_file(self, file_id):

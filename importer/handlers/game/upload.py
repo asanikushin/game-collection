@@ -8,12 +8,17 @@ import os
 
 
 def upload_file():
-    f = request.files['file']
+    values = {}
+    for file in request.files:
+        f = request.files[file]
 
-    file_id = uuid.uuid4()
-    current_app.logger.info(f"process file {f.filename} {file_id}")
-    f.save(os.path.join(current_app.config["UPLOAD_FOLDER"], str(file_id)))
+        filename, file_extension = os.path.splitext(f.filename)
 
-    status = Storage.add_file(file_id)
+        file_id = str(uuid.uuid4())
+        current_app.logger.info(f"process file {f.filename} as {file_id}{file_extension}")
+        f.save(os.path.join(current_app.config["UPLOAD_FOLDER"], str(file_id)))
 
-    return jsonify(file_id=file_id, status=status), constants.responses[status]
+        Storage.add_file(file_id, file_extension)
+        values[file] = file_id
+    status = constants.statuses["batch"]["created"]
+    return jsonify(files=values, status=status), constants.responses[status]
