@@ -1,14 +1,13 @@
 from service.storage import Storage
 from utils.queues.models import BatchList, BatchElement, Index
+from utils.constants import MAX_BATCH_SIZE
 
 from flask import Flask
 from lxml import etree
 
 import threading
 import os
-from typing import *
-
-BATCH_SIZE = 1000
+from typing import Iterable, Callable
 
 
 def process_message(message: str, app: Flask):
@@ -57,7 +56,7 @@ def process_any(file_id: str, app: Flask, iterable: Iterable, converter: Callabl
         for value in iterable:
             batch.add(converter(value, *args, **kwargs))
             count += 1
-            if batch.size() == BATCH_SIZE:
+            if batch.size() == MAX_BATCH_SIZE:
                 app.logger.info(f"process {count} games for {file_id}")
                 Storage.add_batch_list(batch, file_id, count)
                 batch.clear()

@@ -4,4 +4,4 @@ from .rating import RatingProcessor as _Rating
 
 Storage = _Storage(_Game(), _Rating())
 
-__all__ = [Storage]
+__all__ = ["Storage"]

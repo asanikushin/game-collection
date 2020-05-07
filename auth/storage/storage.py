@@ -22,7 +22,7 @@ class Storage:
         self._rabbit = None
 
     def add_user(self, email: str, password: str) -> ID_WITH_STATUS:
-        if not (email := check_email(email)):
+        if (email := check_email(email)) is None:
             return None, statuses["user"]["invalidEmail"]
 
         if self._has_email(email):
@@ -50,7 +50,7 @@ class Storage:
 
         return "Account confirmed", statuses["user"]["confirmed"]
 
-    def create_session(self, email: str, password: str):
+    def create_session(self, email: str, password: str) -> TOKENS_WITH_STATUS:
         if not (user := self._get_user(email)):
             return None, None, statuses["user"]["noUser"]
 
@@ -64,7 +64,7 @@ class Storage:
         session = Session(userId=user.id)
         return self._save_session(email, session)
 
-    def update_session(self, refresh_token: str):
+    def update_session(self, refresh_token: str) -> TOKENS_WITH_STATUS:
         now = datetime.datetime.utcnow()
         session = Session.query.filter(Session.refreshToken == refresh_token).first()
 
@@ -102,7 +102,7 @@ class Storage:
 
         return result, statuses["tokens"]["accessOk"]
 
-    def change_role(self, admin_token: TOKEN, user_id: ID_TYPE, role):
+    def change_role(self, admin_token: TOKEN, user_id: ID_TYPE, role) -> STATUS:
         admin, status = self.check_token(admin_token)
         if status != statuses["tokens"]["accessOk"]:
             return statuses["tokens"]["invalidToken"]
@@ -127,7 +127,7 @@ class Storage:
         return user.check_password(password) if user else False
 
     @staticmethod
-    def _create_confirm_link(user: User, time=datetime.datetime.utcnow()):
+    def _create_confirm_link(user: User, time=datetime.datetime.utcnow()) -> str:
         token = str(jwt.encode(
             {"id": user.id, "exp": time + current_app.config["ACCESS_TOKEN_EXPIRATION"]},
             current_app.config["TOKENS_SECRET"]))[2:-1]
@@ -141,7 +141,7 @@ class Storage:
         self._rabbit = None
 
     @staticmethod
-    def _create_tokens(email: str, session: Session, time=datetime.datetime.utcnow()):
+    def _create_tokens(email: str, session: Session, time=datetime.datetime.utcnow()) -> TOKEN_PAIR:
         refresh_token = secrets.token_hex(64)
         access_token = str(jwt.encode(
             {"email": email, "session": session.id, "user_id": session.userId,
@@ -150,7 +150,7 @@ class Storage:
 
         return access_token, refresh_token
 
-    def _save_session(self, email: str, session: Session):
+    def _save_session(self, email: str, session: Session) -> TOKENS_WITH_STATUS:
         self._db.session.add(session)
         self._db.session.commit()
 

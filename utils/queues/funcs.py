@@ -3,6 +3,7 @@ from pika.exceptions import AMQPConnectionError
 
 import socket
 import time
+from typing import AnyStr
 
 
 def wait_connection(host: str, logger, wait_rounds: int = 10) -> pika.BlockingConnection:
@@ -34,7 +35,7 @@ def wait_connection(host: str, logger, wait_rounds: int = 10) -> pika.BlockingCo
     return connection
 
 
-def send_message(connection: pika.BlockingConnection, queue: str, message):
+def send_message(connection: pika.BlockingConnection, queue: str, message: AnyStr) -> None:
     channel = connection.channel()
 
     channel.queue_declare(queue=queue, durable=True)

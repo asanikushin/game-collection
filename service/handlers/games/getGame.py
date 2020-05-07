@@ -11,7 +11,7 @@ def get_games():
     if "count" in request.args:
         options["count"] = request.args.get("count", type=int)
 
-    if "offset" in options and options["offset"] < 0:
+    if "offset" in options and options["offset"] < 0 or options["offset"] > constants.values.MAX_ELEMENT_COUNT:
         status = constants.statuses["request"]["badArguments"]
         return jsonify(
             create_error(status, "Offset cann't be negative", offset=options["offset"])), constants.responses[status]

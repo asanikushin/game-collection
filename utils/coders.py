@@ -1,8 +1,10 @@
-from json import JSONEncoder
-import decimal
-import uuid
-from typing import List, Optional
+from utils.constants import STATUS
+
 import datetime
+import decimal
+from json import JSONEncoder
+from typing import Any, Dict, List, Optional
+import uuid
 
 
 class CustomJSONEncoder(JSONEncoder):
@@ -11,14 +13,12 @@ class CustomJSONEncoder(JSONEncoder):
             return o.get_dict()
         except AttributeError:
             pass
-        if type(o) == decimal.Decimal:
-            return str(o)
-        if type(o) == uuid.UUID:
+        if isinstance(o, (decimal.Decimal, uuid.UUID)):
             return str(o)
         return o.__dict__
 
 
-def parse_csv_row(row: str) -> List:
+def parse_csv_row(row: str) -> List[str]:
     result = []
     cur = ""
     is_str = False
@@ -61,12 +61,12 @@ def parse_timedelta(delta: Optional[str]) -> Optional[datetime.timedelta]:
     return datetime.timedelta(**options)
 
 
-def create_error_response(base, **options):
+def create_error_response(base, **options) -> Dict[str, Any]:
     if len(options):
         return dict(base=base, args=options)
     else:
         return dict(base=base)
 
 
-def create_error(status, base, **option):
+def create_error(status: STATUS, base: str, **option) -> Dict[str, Any]:
     return dict(error=create_error_response(base, **option), status=status)

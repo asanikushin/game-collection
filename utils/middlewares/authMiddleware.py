@@ -1,11 +1,12 @@
 from utils import constants, create_error
 
-from utils.pb.auth_pb2 import ValidateRequest
+from utils.pb.auth_pb2 import ValidateRequest, ValidateResponse
 from utils.pb.auth_pb2_grpc import AuthStub
 
 from werkzeug.wrappers import Request, Response
 import grpc
 import json
+from typing import Optional, List, Tuple
 
 
 class AuthMiddleware:
@@ -13,7 +14,7 @@ class AuthMiddleware:
         self.app = app
         self.base = base_app
         self.logger = logger
-        self.allowed = allowed
+        self.allowed: Optional[List[Tuple[str, str]]] = allowed
 
         self.auth_method = "Bearer "
 
@@ -42,9 +43,9 @@ class AuthMiddleware:
 
         self.logger.info("Auth request")
 
-        access_token = authorization[len(self.auth_method):]
+        access_token: str = authorization[len(self.auth_method):]
         validate_request = ValidateRequest(access_token=access_token)
-        auth = self.validate_stub.Validate(validate_request)
+        auth: ValidateResponse = self.validate_stub.Validate(validate_request)
 
         if auth.status != constants.statuses["tokens"]["accessOk"]:
             self.logger.warn("Access token is not OK")

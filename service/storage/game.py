@@ -50,7 +50,7 @@ class GameProcessor:
         self._db.session.commit()
         return game, statuses["game"]["deleted"]
 
-    def delete_all_games(self) -> typing.Tuple[int, STATUS]:
+    def delete_all_games(self) -> COUNT_WITH_STATUS:
         rows_deleted = self._db.session.query(Game).delete()
         self._db.session.commit()
         return rows_deleted, statuses["game"]["deleted"]
@@ -66,7 +66,7 @@ class GameProcessor:
         self._db.session.commit()
         return game, statuses["game"]["modified"]
 
-    def add_batch_list(self, batch: BatchList):
+    def add_batch_list(self, batch: BatchList) -> None:
         for element in batch.to_list():
             game = Game(**element.get_dict())
             self._db.session.add(game)

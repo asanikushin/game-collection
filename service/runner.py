@@ -36,6 +36,7 @@ manager.add_command('db', MigrateCommand)
 
 if __name__ == '__main__':
     rabbit = threading.Thread(target=run_consuming)
+    rabbit.setName("RabbitMQ consumer")
     rabbit.start()
 
     manager.run()

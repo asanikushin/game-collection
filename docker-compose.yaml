@@ -90,7 +90,7 @@ services:
       SMTP_URL: emailmock
       RABBITMQ: rabbitmq
       QUEUE: "notifications"
-      FROM_EMAIL: test@mock
+      #FROM_EMAIL: test@mock
     depends_on:
       - emailmock
 

@@ -14,7 +14,7 @@ class RatingProcessor:
     def __init__(self):
         self._db = db
 
-    def add_score(self, parameters) -> RAT_WITH_STATUS:
+    def add_score(self, parameters) -> RATING_WITH_STATUS:
         correct = check_model_options(Methods.POST, parameters, Rating, service="rating")
         if correct != statuses["internal"]["correctModelData"]:
             return None, correct
@@ -25,7 +25,7 @@ class RatingProcessor:
         self._db.session.commit()
         return score, statuses["rating"]["created"]
 
-    def delete_user_score(self, game_id: GAME_ID_TYPE, user_id) -> RAT_WITH_STATUS:
+    def delete_user_score(self, game_id: GAME_ID_TYPE, user_id) -> RATING_WITH_STATUS:
         if (score := self._get_score(game_id, user_id)) is None:
             return None, statuses["rating"]["notExists"]
         self._db.session.delete(score)
@@ -37,23 +37,23 @@ class RatingProcessor:
         self._db.session.commit()
         return rows_deleted, statuses["rating"]["deleted"]
 
-    def delete_all_scores(self):
+    def delete_all_scores(self) -> COUNT_WITH_STATUS:
         rows_deleted = self._db.session.query(Rating).delete()
         self._db.session.commit()
         return rows_deleted, statuses["rating"]["deleted"]
 
     @staticmethod
-    def get_game_rating(game_id: GAME_ID_TYPE) -> RATING_WITH_STATUS:
+    def get_game_rating(game_id: GAME_ID_TYPE) -> RATING_VALUE_WITH_STATUS:
         val = Rating.query.with_entities(func.avg(Rating.score)).filter(Rating.game_id == game_id) \
             .group_by(Rating.game_id).first()
         val = val[0] if val else 0
         return val, statuses["rating"]["returned"]
 
     @staticmethod
-    def get_user_scores(user_id) -> RAT_WITH_STATUS:
+    def get_user_scores(user_id) -> RATING_WITH_STATUS:
         return Rating.query.filter(Rating.user_id == user_id).all(), statuses["rating"]["returned"]
 
-    def update_score(self, parameters, method) -> RAT_WITH_STATUS:
+    def update_score(self, parameters, method) -> RATING_WITH_STATUS:
         game_id = parameters["game_id"]
         user_id = parameters["user_id"]
         if (score := self._get_score(game_id, user_id)) is None:

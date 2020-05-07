@@ -1,5 +1,6 @@
 import smtplib
 from notifications import BaseConfig
+import logging
 
 
 def send_email(address: str, message: str, subject: str = ""):

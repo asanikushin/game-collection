@@ -1,6 +1,5 @@
 from .statuses import STATUS, statuses
 from typing import Dict
-import logging as __log
 
 RESPONSE = int
 responses: Dict[STATUS, RESPONSE] = {
