@@ -1,14 +1,17 @@
 from service.storage import Storage
 from utils.queues.models import BatchList, BatchElement, Index
 
+from flask import Flask
 from lxml import etree
+
 import threading
 import os
+from typing import *
 
 BATCH_SIZE = 1000
 
 
-def process_message(message: str, app):
+def process_message(message: str, app: Flask):
     message = message.split(".")
     app.logger.info(message)
     file_id = message[0]
@@ -18,54 +21,49 @@ def process_message(message: str, app):
         threading.Thread(target=process_xml_file, args=(file_id, app,)).start()
 
 
-def process_csv_file(file_id: str, app):
-    path = os.path.join(app.config["UPLOAD_FOLDER"], file_id)
-    with open(path) as file:
-        with app.app_context():
-            header = file.readline().strip()
-            app.logger.info(f"File {file_id} header {header}")
-            indexes = Index.parse_from_header(header)
-            app.logger.info(f"File {file_id} indexes {indexes}")
+def process_csv_file(file_id: str, app: Flask):
+    def lines_generator():
+        for row in file:
+            yield row.decode().strip()
 
-            batch = BatchList()
-            count = 0
-            for row in file:
-                row = row.strip()
-                batch.add(BatchElement.from_csv_row(row, indexes))
-                count += 1
-                if batch.size() == BATCH_SIZE:
-                    app.logger.info(f"process {count} lines for {file_id}")
-                    Storage.add_batch_list(batch, file_id, count)
-                    batch.clear()
-
-            if batch.size() != 0:
-                Storage.add_batch_list(batch, file_id, count)
-                app.logger.info(f"process {count} lines for {file_id}")
-            Storage.add_batch_list(None, file_id, count, True)
-            app.logger.info(f"Finish processing file {file_id} with {count} lines")
-
-
-def process_xml_file(file_id: str, app):
     path = os.path.join(app.config["UPLOAD_FOLDER"], file_id)
     with open(path, "rb") as file:
-        with app.app_context():
-            batch = BatchList()
-            count = 0
-            for event, element in etree.iterparse(file):
-                if element.tag != "game":
-                    continue
+        header = file.readline().decode().strip()
+        indexes = Index.parse_from_header(header)
+        app.logger.info(f"File {file_id} header {header}")
+        app.logger.info(f"File {file_id} indexes {indexes}")
 
-                batch.add(BatchElement.from_xml_element(element))
-                count += 1
-                if batch.size() == BATCH_SIZE:
-                    app.logger.info(f"process {count} games for {file_id}")
-                    Storage.add_batch_list(batch, file_id, count)
-                    batch.clear()
+        process_any(file_id, app, lines_generator(), BatchElement.from_csv_row, indexes)
 
-                element.clear(keep_tail=True)
 
-            if batch.size() != 0:
-                Storage.add_batch_list(batch, file_id, count)
+def process_xml_file(file_id: str, app: Flask):
+    def tags_generator():
+        for event, element in etree.iterparse(file):
+            if element.tag != "game":
+                continue
+            yield element
+            element.clear(keep_tail=True)
+
+    path = os.path.join(app.config["UPLOAD_FOLDER"], file_id)
+    with open(path, "rb") as file:
+        process_any(file_id, app, tags_generator(), BatchElement.from_xml_element)
+
+
+def process_any(file_id: str, app: Flask, iterable: Iterable, converter: Callable, *args, **kwargs):
+    batch = BatchList()
+    count = 0
+    with app.app_context():
+        app.logger.info(f"Process file {file_id}")
+        for value in iterable:
+            batch.add(converter(value, *args, **kwargs))
+            count += 1
+            if batch.size() == BATCH_SIZE:
                 app.logger.info(f"process {count} games for {file_id}")
-            Storage.add_batch_list(None, file_id, count, True)
-            app.logger.info(f"Finish processing file {file_id} with {count} games")
+                Storage.add_batch_list(batch, file_id, count)
+                batch.clear()
+
+        if batch.size() != 0:
+            Storage.add_batch_list(batch, file_id, count)
+            app.logger.info(f"process {count} games for {file_id}")
+        Storage.add_batch_list(None, file_id, count, True)
+        app.logger.info(f"Finish processing file {file_id} with {count} games")
