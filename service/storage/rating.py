@@ -32,7 +32,7 @@ class RatingProcessor:
         self._db.session.commit()
         return score, statuses["rating"]["deleted"]
 
-    def delete_game_score(self, game_id: GAME_ID_TYPE) -> typing.Tuple[int, STATUS]:
+    def delete_game_score(self, game_id: GAME_ID_TYPE) -> COUNT_WITH_STATUS:
         rows_deleted = self._db.session.query(Rating).filter(Rating.game_id == game_id).delete()
         self._db.session.commit()
         return rows_deleted, statuses["rating"]["deleted"]
