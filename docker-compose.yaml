@@ -1,49 +1,6 @@
 version: "3"
 
 services:
-  db:
-    image: postgres
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_DB: service
-      POSTGRES_PASSWORD: ue3um2yRJA
-      PGDATA: "/var/lib/postgresql/data/pgdata"
-    volumes:
-      - ./service-data:/var/lib/postgresql/data
-
-  auth_db:
-    image: postgres
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_DB: auth
-      POSTGRES_PASSWORD: ue3um2yRJA
-      PGDATA: "/var/lib/postgresql/data/pgdata"
-    volumes:
-      - ./auth-data:/var/lib/postgresql/data
-
-  service:
-    build:
-      context: .
-      dockerfile: Dockerfile-flask
-      args:
-        NAME: "service"
-    links:
-      - auth
-      - db
-      - game-import
-    environment:
-      FLASK_ENV: config.ProductionConfig
-      SQLALCHEMY_DATABASE_URI: "postgresql://admin:ue3um2yRJA@db:5432/service"
-      AUTH_GRPC: "auth:5001"
-      IMPORTER_GRPC: "game-import:5001"
-      RABBITMQ: rabbitmq
-      QUEUE: "importer"
-      UPLOAD_FOLDER: "/tmp/files"
-    ports:
-      - 8081:8000
-    volumes:
-      - ./import-data:/tmp/files
-
   auth:
     build:
       context: .
@@ -62,6 +19,22 @@ services:
       CONFIRM_URL: "http://localhost:8082"
     ports:
       - 8082:8000
+
+  service:
+    build:
+      context: .
+      dockerfile: Dockerfile-flask
+      args:
+        NAME: "service"
+    links:
+      - auth
+      - db
+    environment:
+      FLASK_ENV: config.ProductionConfig
+      SQLALCHEMY_DATABASE_URI: "postgresql://admin:ue3um2yRJA@db:5432/service"
+      AUTH_GRPC: "auth:5001"
+    ports:
+      - 8081:8000
 
   game-import:
     build:
@@ -82,6 +55,23 @@ services:
     volumes:
       - ./import-data:/tmp/files
 
+  loader:
+    build:
+      context: .
+      dockerfile: loader/Dockerfile
+    links:
+      - db
+      - game-import
+    environment:
+      FLASK_ENV: config.ProductionConfig
+      SQLALCHEMY_DATABASE_URI: "postgresql://admin:ue3um2yRJA@db:5432/service"
+      IMPORTER_GRPC: "game-import:5001"
+      RABBITMQ: rabbitmq
+      QUEUE: "importer"
+      UPLOAD_FOLDER: "/tmp/files"
+    volumes:
+      - ./import-data:/tmp/files
+
   notifications:
     build:
       context: .
@@ -90,7 +80,7 @@ services:
       SMTP_URL: emailmock
       RABBITMQ: rabbitmq
       QUEUE: "notifications"
-      #FROM_EMAIL: test@mock
+      FROM_EMAIL: test@mock
     depends_on:
       - emailmock
 
@@ -104,3 +94,23 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_DB: service
+      POSTGRES_PASSWORD: ue3um2yRJA
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ./service-data:/var/lib/postgresql/data
+
+  auth_db:
+    image: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_DB: auth
+      POSTGRES_PASSWORD: ue3um2yRJA
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ./auth-data:/var/lib/postgresql/data

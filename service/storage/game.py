@@ -4,7 +4,7 @@ from utils import check_model_options
 from utils.constants import statuses, Methods, MAX_ELEMENT_COUNT
 from utils.queues.models import BatchList
 
-from service.models import Game
+from utils.models.games import Game
 
 from service import db
 

@@ -1,7 +1,7 @@
 from utils.constants import STATUS
 
-from service.models.game import Game as _Game
-from service.models.rating import Rating as _Rating
+from utils.models.games import Game as _Game
+from utils.models.games import Rating as _Rating
 
 from typing import Optional, Tuple, List
 

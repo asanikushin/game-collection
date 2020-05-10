@@ -1,6 +1,6 @@
 from .types import *
 
-from auth.models.users import User, Session
+from utils.models.users import User, Session
 from auth import db
 
 from utils.constants import statuses, UserRole

@@ -1,7 +1,7 @@
 from .types import *
 
 from importer import db
-from importer.models import Batch
+from utils.models.batch import Batch
 
 from utils.constants import statuses
 from utils.queues import wait_connection, send_message

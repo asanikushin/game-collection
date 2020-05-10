@@ -1,4 +1,4 @@
-from service.storage import Storage
+from loader.storage import Storage
 from utils.queues.models import BatchList, BatchElement, Index
 from utils.constants import MAX_BATCH_SIZE
 

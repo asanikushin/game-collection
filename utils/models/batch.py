@@ -1,5 +1,7 @@
-from importer import db
 from sqlalchemy_utils import UUIDType
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 
 class Batch(db.Model):

@@ -1,6 +1,6 @@
 from .types import *
 
-from service.models import Rating
+from utils.models.games import Rating
 
 from service import db
 

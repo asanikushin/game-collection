@@ -1,15 +1,13 @@
 from utils import CustomJSONEncoder
-
+from utils.models.games import db
 import importer.config
 
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 import logging
 import os
 
-db = SQLAlchemy()
 migrate = Migrate()
 
 logging.basicConfig(
