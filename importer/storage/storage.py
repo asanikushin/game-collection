@@ -15,7 +15,9 @@ class Storage:
         self._rabbit = None
 
     def _init_rabbit_connection(self):
-        self._rabbit = wait_connection(current_app.config["RABBITMQ"], current_app.logger)
+        self._rabbit = wait_connection(
+            current_app.config["RABBITMQ"], current_app.logger
+        )
 
     def add_file(self, file_id: FILE_ID_TYPE, extension="") -> STATUS:
         file = self._add_file(file_id)

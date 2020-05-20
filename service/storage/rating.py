@@ -15,12 +15,20 @@ class RatingProcessor:
         self._db = db
 
     def add_score(self, parameters) -> RATING_WITH_STATUS:
-        correct = check_model_options(Methods.POST, parameters, Rating, service="rating")
+        correct = check_model_options(
+            Methods.POST, parameters, Rating, service="rating"
+        )
         if correct != statuses["internal"]["correctModelData"]:
             return None, correct
-        if (previous := self._get_score(parameters["game_id"], parameters["user_id"])) is not None:
+        if (
+            previous := self._get_score(parameters["game_id"], parameters["user_id"])
+        ) is not None:
             return self.update_score(parameters, "UPDATE")
-        score = Rating(game_id=parameters["game_id"], user_id=parameters["user_id"], score=parameters["score"])
+        score = Rating(
+            game_id=parameters["game_id"],
+            user_id=parameters["user_id"],
+            score=parameters["score"],
+        )
         self._db.session.add(score)
         self._db.session.commit()
         return score, statuses["rating"]["created"]
@@ -33,7 +41,9 @@ class RatingProcessor:
         return score, statuses["rating"]["deleted"]
 
     def delete_game_score(self, game_id: GAME_ID_TYPE) -> COUNT_WITH_STATUS:
-        rows_deleted = self._db.session.query(Rating).filter(Rating.game_id == game_id).delete()
+        rows_deleted = (
+            self._db.session.query(Rating).filter(Rating.game_id == game_id).delete()
+        )
         self._db.session.commit()
         return rows_deleted, statuses["rating"]["deleted"]
 
@@ -44,14 +54,21 @@ class RatingProcessor:
 
     @staticmethod
     def get_game_rating(game_id: GAME_ID_TYPE) -> RATING_VALUE_WITH_STATUS:
-        val = Rating.query.with_entities(func.avg(Rating.score)).filter(Rating.game_id == game_id) \
-            .group_by(Rating.game_id).first()
+        val = (
+            Rating.query.with_entities(func.avg(Rating.score))
+            .filter(Rating.game_id == game_id)
+            .group_by(Rating.game_id)
+            .first()
+        )
         val = val[0] if val else 0
         return val, statuses["rating"]["returned"]
 
     @staticmethod
     def get_user_scores(user_id) -> RATING_WITH_STATUS:
-        return Rating.query.filter(Rating.user_id == user_id).all(), statuses["rating"]["returned"]
+        return (
+            Rating.query.filter(Rating.user_id == user_id).all(),
+            statuses["rating"]["returned"],
+        )
 
     def update_score(self, parameters, method) -> RATING_WITH_STATUS:
         game_id = parameters["game_id"]
@@ -59,7 +76,9 @@ class RatingProcessor:
         if (score := self._get_score(game_id, user_id)) is None:
             return None, statuses["rating"]["notExists"]
 
-        correct = check_model_options(getattr(Methods, method), parameters, Rating, score, service="rating")
+        correct = check_model_options(
+            getattr(Methods, method), parameters, Rating, score, service="rating"
+        )
         if correct != statuses["internal"]["correctModelData"]:
             return None, correct
         score.values_update(parameters)

@@ -11,14 +11,15 @@ import os
 migrate = Migrate()
 
 logging.basicConfig(
-    format='%(asctime)s %(name)-8s %(levelname)-8s %(message)s',
+    format="%(asctime)s %(name)-8s %(levelname)-8s %(message)s",
     level=logging.INFO,
-    datefmt='%Y-%m-%d %H:%M:%S')
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 
 
 def create_app(config_class="service.config.DevelopmentConfig"):
     app = Flask(__name__)
-    app.config.from_object(os.environ.get('FLASK_ENV') or config_class)
+    app.config.from_object(os.environ.get("FLASK_ENV") or config_class)
     app.json_encoder = CustomJSONEncoder
 
     db.init_app(app)
@@ -35,12 +36,17 @@ def create_app(config_class="service.config.DevelopmentConfig"):
     log = logging.getLogger(app.name)
     log.setLevel(app.config["LOG_LEVEL"])
 
-    app.wsgi_app = AuthMiddleware(app.wsgi_app, app, log, (
-        ("/rating", "POST"),
-        ("/rating", "PUT"),
-        ("/rating", "PATCH"),
-        ("/rating", "DELETE"),
-    ))
+    app.wsgi_app = AuthMiddleware(
+        app.wsgi_app,
+        app,
+        log,
+        (
+            ("/rating", "POST"),
+            ("/rating", "PUT"),
+            ("/rating", "PATCH"),
+            ("/rating", "DELETE"),
+        ),
+    )
 
     app.wsgi_app = LoggerMiddleware(app.wsgi_app, log)
 

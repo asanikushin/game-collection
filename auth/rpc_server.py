@@ -29,7 +29,7 @@ def create_server(cur_app, port=5001):
     app = cur_app
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=4))
     auth_pb2_grpc.add_AuthServicer_to_server(AuthServicer(), server)
-    server.add_insecure_port(f'[::]:{port}')
+    server.add_insecure_port(f"[::]:{port}")
     logging.info(f"Start gRPC server of port {port}")
 
     return server

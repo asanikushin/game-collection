@@ -14,7 +14,9 @@ def check_keys(base: Dict[str, Any], *keys: str, strict=True) -> bool:
         return intersect != set()
 
 
-def check_model_options(operation: Methods, options: Dict, cls, instance: object = None, service="game") -> STATUS:
+def check_model_options(
+    operation: Methods, options: Dict, cls, instance: object = None, service="game"
+) -> STATUS:
     must, other, constr = cls.get_fields()
     all_fields = set(must + other)
 
@@ -38,7 +40,9 @@ def check_model_options(operation: Methods, options: Dict, cls, instance: object
     elif operation in (Methods.PUT, Methods.PATCH):
         if instance:
             for field in constr:
-                if (val := options.get(field, None)) is not None and val != getattr(instance, field):
+                if (val := options.get(field, None)) is not None and val != getattr(
+                    instance, field
+                ):
                     return statuses[service]["replacingData"]
         return statuses["internal"]["correctModelData"]
     else:

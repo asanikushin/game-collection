@@ -5,7 +5,9 @@ from flask import jsonify, request, current_app
 
 
 def delete_score(game_id=None):
-    current_app.logger.info(f"Deleting score by {request.environ['user_email']} and game id {game_id}")
+    current_app.logger.info(
+        f"Deleting score by {request.environ['user_email']} and game id {game_id}"
+    )
 
     game, status = Storage.delete_score(game_id, request.environ["user_id"])
     http_status = constants.responses[status]

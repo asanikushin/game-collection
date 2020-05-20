@@ -31,7 +31,7 @@ class User(db.Model):
             return UserRole.DEFAULT.value
 
     def __repr__(self):
-        return '<User {}: {}>'.format(self.id, self.email)
+        return "<User {}: {}>".format(self.id, self.email)
 
     def get_dict(self):
         return dict(id=self.id, email=self.email, role=self.get_role())
@@ -41,10 +41,16 @@ class Session(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     refreshToken = db.Column(db.Text)
     refreshTokenExpireAt = db.Column(db.DateTime)
-    userId = db.Column(db.Integer, db.ForeignKey('user.id'))
+    userId = db.Column(db.Integer, db.ForeignKey("user.id"))
 
     def __repr__(self):
-        return '<Session {}: {} at {}>'.format(self.userId, self.refreshToken, self.refreshTokenExpireAt)
+        return "<Session {}: {} at {}>".format(
+            self.userId, self.refreshToken, self.refreshTokenExpireAt
+        )
 
     def get_dict(self):
-        return dict(refreshToken=self.refreshToken, refreshTokenExpireAt=self.refreshTokenExpireAt, userId=self.userId)
+        return dict(
+            refreshToken=self.refreshToken,
+            refreshTokenExpireAt=self.refreshTokenExpireAt,
+            userId=self.userId,
+        )

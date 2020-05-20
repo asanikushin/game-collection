@@ -26,9 +26,10 @@ def callback(ch, method, properties, body):
 
 
 logging.basicConfig(
-    format='%(asctime)s %(name)-8s %(levelname)-8s %(message)s',
+    format="%(asctime)s %(name)-8s %(levelname)-8s %(message)s",
     level=logging.INFO,
-    datefmt='%Y-%m-%d %H:%M:%S')
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 
 logging.info(__name__)
 logging.info("Start connecting")
@@ -38,7 +39,7 @@ logging.info(BaseConfig.QUEUE)
 channel = connection.channel()
 channel.queue_declare(queue=BaseConfig.QUEUE, durable=True)
 
-logging.info(' [*] Waiting for messages. To exit press CTRL+C')
+logging.info(" [*] Waiting for messages. To exit press CTRL+C")
 channel.basic_consume(on_message_callback=callback, queue=BaseConfig.QUEUE)
 
 channel.start_consuming()

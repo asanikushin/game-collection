@@ -5,5 +5,5 @@ from flask import Blueprint
 
 game_file = Blueprint("games", __name__)
 
-game_file.add_url_rule("/", "upload_file", upload_file, methods=['POST'])
+game_file.add_url_rule("/", "upload_file", upload_file, methods=["POST"])
 game_file.add_url_rule("/", "check_id", check_id, methods=["GET"])

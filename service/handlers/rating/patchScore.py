@@ -12,7 +12,9 @@ def patch_score(game_id=None):
         http_status = constants.responses[status]
         return jsonify(create_error(status, "missing score data")), http_status
 
-    current_app.logger.info(f"Updating score by {request.environ['user_email']} and game id {game_id}")
+    current_app.logger.info(
+        f"Updating score by {request.environ['user_email']} and game id {game_id}"
+    )
 
     request.json["user_id"] = request.environ["user_id"]
     request.json["game_id"] = game_id

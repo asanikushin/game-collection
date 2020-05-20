@@ -12,14 +12,15 @@ import os
 # db = SQLAlchemy()
 
 logging.basicConfig(
-    format='%(asctime)s %(name)-8s %(levelname)-8s %(message)s',
+    format="%(asctime)s %(name)-8s %(levelname)-8s %(message)s",
     level=logging.INFO,
-    datefmt='%Y-%m-%d %H:%M:%S')
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 
 
 def create_app(config_class="loader.config.DevelopmentConfig"):
     app = Flask(__name__)
-    app.config.from_object(os.environ.get('FLASK_ENV') or config_class)
+    app.config.from_object(os.environ.get("FLASK_ENV") or config_class)
     app.json_encoder = CustomJSONEncoder
 
     db.init_app(app)

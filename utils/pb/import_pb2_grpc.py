@@ -14,10 +14,10 @@ class ImportStub(object):
             channel: A grpc.Channel.
         """
         self.Load = channel.unary_unary(
-                '/Import/Load',
-                request_serializer=utils_dot_pb_dot_import__pb2.ImportRequest.SerializeToString,
-                response_deserializer=utils_dot_pb_dot_import__pb2.ImportResponse.FromString,
-                )
+            "/Import/Load",
+            request_serializer=utils_dot_pb_dot_import__pb2.ImportRequest.SerializeToString,
+            response_deserializer=utils_dot_pb_dot_import__pb2.ImportResponse.FromString,
+        )
 
 
 class ImportServicer(object):
@@ -26,39 +26,51 @@ class ImportServicer(object):
     def Load(self, request, context):
         """Missing associated documentation comment in .proto file"""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
 
 def add_ImportServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'Load': grpc.unary_unary_rpc_method_handler(
-                    servicer.Load,
-                    request_deserializer=utils_dot_pb_dot_import__pb2.ImportRequest.FromString,
-                    response_serializer=utils_dot_pb_dot_import__pb2.ImportResponse.SerializeToString,
-            ),
+        "Load": grpc.unary_unary_rpc_method_handler(
+            servicer.Load,
+            request_deserializer=utils_dot_pb_dot_import__pb2.ImportRequest.FromString,
+            response_serializer=utils_dot_pb_dot_import__pb2.ImportResponse.SerializeToString,
+        ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'Import', rpc_method_handlers)
+        "Import", rpc_method_handlers
+    )
     server.add_generic_rpc_handlers((generic_handler,))
 
 
- # This class is part of an EXPERIMENTAL API.
+# This class is part of an EXPERIMENTAL API.
 class Import(object):
     """Missing associated documentation comment in .proto file"""
 
     @staticmethod
-    def Load(request,
+    def Load(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Import/Load',
+            "/Import/Load",
             utils_dot_pb_dot_import__pb2.ImportRequest.SerializeToString,
             utils_dot_pb_dot_import__pb2.ImportResponse.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )

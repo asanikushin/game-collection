@@ -6,7 +6,9 @@ import time
 from typing import AnyStr
 
 
-def wait_connection(host: str, logger, wait_rounds: int = 10) -> pika.BlockingConnection:
+def wait_connection(
+    host: str, logger, wait_rounds: int = 10
+) -> pika.BlockingConnection:
     iteration = 0
     cur_sleep = 1
     sum_sleep = 0
@@ -30,21 +32,25 @@ def wait_connection(host: str, logger, wait_rounds: int = 10) -> pika.BlockingCo
         connection = None
     logger.info(f"Total sleep time {sum_sleep}")
     if connection is None:
-        raise TimeoutError(f"Cannot create connection with RabbitMQ {host} for {wait_rounds} rounds and "
-                           f"{sum_sleep} summary waiting time")
+        raise TimeoutError(
+            f"Cannot create connection with RabbitMQ {host} for {wait_rounds} rounds and "
+            f"{sum_sleep} summary waiting time"
+        )
     return connection
 
 
-def send_message(connection: pika.BlockingConnection, queue: str, message: AnyStr) -> None:
+def send_message(
+    connection: pika.BlockingConnection, queue: str, message: AnyStr
+) -> None:
     channel = connection.channel()
 
     channel.queue_declare(queue=queue, durable=True)
 
     # TODO: add queue exchange
-    channel.basic_publish(exchange='',
-                          routing_key=queue,
-                          body=message,
-                          properties=pika.BasicProperties(
-                              delivery_mode=2,  # make message persistent
-                          ))
+    channel.basic_publish(
+        exchange="",
+        routing_key=queue,
+        body=message,
+        properties=pika.BasicProperties(delivery_mode=2,),  # make message persistent
+    )
     connection.close()

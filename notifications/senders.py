@@ -4,13 +4,15 @@ import logging
 
 
 def send_email(address: str, message: str, subject: str = ""):
-    email = "\r\n".join((
-        "From: %s" % BaseConfig.FROM_EMAIL,
-        "To: %s" % address,
-        "Subject: %s" % subject,
-        "",
-        message
-    ))
+    email = "\r\n".join(
+        (
+            "From: %s" % BaseConfig.FROM_EMAIL,
+            "To: %s" % address,
+            "Subject: %s" % subject,
+            "",
+            message,
+        )
+    )
 
     server = smtplib.SMTP(BaseConfig.SMTP_URI)
     try:

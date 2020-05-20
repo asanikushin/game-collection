@@ -12,9 +12,7 @@ responses: Dict[STATUS, RESPONSE] = {
     statuses["game"]["replacingData"]: 403,
     statuses["game"]["extraFields"]: 400,
     statuses["game"]["invalidData"]: 400,
-
     statuses["request"]["badArguments"]: 400,
-
     statuses["user"]["created"]: 201,
     statuses["user"]["emailUsed"]: 406,
     statuses["user"]["wrongPassword"]: 403,
@@ -26,7 +24,6 @@ responses: Dict[STATUS, RESPONSE] = {
     statuses["user"]["requestNotAllowed"]: 403,
     statuses["user"]["unauthorized"]: 401,
     statuses["user"]["roleChanged"]: 200,
-
     statuses["tokens"]["created"]: 201,
     statuses["tokens"]["noSuchToken"]: 404,
     statuses["tokens"]["refreshTokenExpired"]: 403,
@@ -34,7 +31,6 @@ responses: Dict[STATUS, RESPONSE] = {
     statuses["tokens"]["accessOk"]: 200,
     statuses["tokens"]["missingData"]: 400,
     statuses["tokens"]["invalidToken"]: 406,
-
     statuses["rating"]["created"]: 201,
     statuses["rating"]["modified"]: 202,
     statuses["rating"]["deleted"]: 200,
@@ -45,7 +41,6 @@ responses: Dict[STATUS, RESPONSE] = {
     statuses["rating"]["extraFields"]: 400,
     statuses["rating"]["invalidGameId"]: 400,
     statuses["rating"]["invalidData"]: 400,
-
     statuses["batch"]["created"]: 201,
     statuses["batch"]["notExists"]: 404,
     statuses["batch"]["returned"]: 200,

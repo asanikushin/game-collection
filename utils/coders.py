@@ -26,7 +26,7 @@ def parse_csv_row(row: str) -> List[str]:
         if token == "," and not is_str:
             result.append(cur)
             cur = ""
-        elif token == "\"":
+        elif token == '"':
             is_str = not is_str
         else:
             cur += token

@@ -11,10 +11,20 @@ def get_games():
     if "count" in request.args:
         options["count"] = request.args.get("count", type=int)
 
-    if "offset" in options and options["offset"] < 0 or options.get("count", 0) > constants.values.MAX_ELEMENT_COUNT:
+    if (
+        "offset" in options
+        and options["offset"] < 0
+        or options.get("count", 0) > constants.values.MAX_ELEMENT_COUNT
+    ):
         status = constants.statuses["request"]["badArguments"]
-        return jsonify(
-            create_error(status, "Offset cann't be negative", offset=options["offset"])), constants.responses[status]
+        return (
+            jsonify(
+                create_error(
+                    status, "Offset cann't be negative", offset=options["offset"]
+                )
+            ),
+            constants.responses[status],
+        )
 
     games, status = Storage.get_games(**options)
     http_status = constants.responses[status]
@@ -23,7 +33,10 @@ def get_games():
     if len(options) != 0 or count != total_count:
         options["count"] = count
         options["offset"] = options.get("offset", 0)
-    return jsonify(games=games, total_count=total_count, status=status, **options), http_status
+    return (
+        jsonify(games=games, total_count=total_count, status=status, **options),
+        http_status,
+    )
 
 
 def get_game(prod_id=None):

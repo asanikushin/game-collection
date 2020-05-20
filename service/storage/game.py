@@ -59,7 +59,9 @@ class GameProcessor:
         if (game := self._get_game(game_id)) is None:
             return None, statuses["game"]["notExists"]
 
-        correct = check_model_options(getattr(Methods, method), options, Game, game, service="game")
+        correct = check_model_options(
+            getattr(Methods, method), options, Game, game, service="game"
+        )
         if correct != statuses["internal"]["correctModelData"]:
             return None, correct
         game.values_update(**options)

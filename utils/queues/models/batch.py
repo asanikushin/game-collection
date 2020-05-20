@@ -18,21 +18,29 @@ class Index:
             data[self.name] if len(data) > self.name else "No name",
             data[self.categories] if len(data) > self.categories else "No category",
             data[self.min_players] if len(data) > self.min_players else None,
-            data[self.max_players] if len(data) > self.max_players else None
+            data[self.max_players] if len(data) > self.max_players else None,
         )
         return result
 
     @staticmethod
     def parse_from_header(header: str):
         data = parse_csv_row(header)
-        return Index(data.index("name"), data.index("categories"), data.index("min_players"),
-                     data.index("max_players"))
+        return Index(
+            data.index("name"),
+            data.index("categories"),
+            data.index("min_players"),
+            data.index("max_players"),
+        )
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Index):
             return NotImplemented
-        return self.name == other.name and self.categories == other.categories \
-               and self.min_players == other.min_players and self.max_players == other.max_players
+        return (
+            self.name == other.name
+            and self.categories == other.categories
+            and self.min_players == other.min_players
+            and self.max_players == other.max_players
+        )
 
     def __repr__(self):
         return f"Index({self.name}, {self.categories}, {self.min_players}, {self.max_players})"
@@ -48,14 +56,24 @@ class BatchElement:
     @staticmethod
     def from_csv_row(row: str, index: Index) -> "BatchElement":
         data = index.parse_csv_row(row)
-        return BatchElement(data[0], data[1].split(" | ")[0], my_int(data[2]), my_int(data[3]))
+        return BatchElement(
+            data[0], data[1].split(" | ")[0], my_int(data[2]), my_int(data[3])
+        )
 
     @staticmethod
     def from_xml_element(element: etree._Element) -> "BatchElement":
         name = value.text if (value := element.find("title")) is not None else "No name"
-        category = value.text if (value := element.find("category")) is not None else "No category"
-        min_players = value.text if (value := element.find("min_players")) is not None else None
-        max_players = value.text if (value := element.find("max_players")) is not None else None
+        category = (
+            value.text
+            if (value := element.find("category")) is not None
+            else "No category"
+        )
+        min_players = (
+            value.text if (value := element.find("min_players")) is not None else None
+        )
+        max_players = (
+            value.text if (value := element.find("max_players")) is not None else None
+        )
 
         return BatchElement(name, category, my_int(min_players), my_int(max_players))
 
@@ -78,10 +96,15 @@ class BatchElement:
             return NotImplemented
         min_player = self.min_players == other.min_players
         max_player = self.max_players == other.max_players
-        return self.name == other.name and self.category == other.category and min_player and max_player
+        return (
+            self.name == other.name
+            and self.category == other.category
+            and min_player
+            and max_player
+        )
 
     def __repr__(self):
-        return f"BatchElement(\"{self.name}\", \"{self.category}\", {self.min_players}, {self.max_players})"
+        return f'BatchElement("{self.name}", "{self.category}", {self.min_players}, {self.max_players})'
 
 
 class BatchList:

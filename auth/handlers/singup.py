@@ -24,5 +24,7 @@ def register_user():
     elif status == constants.statuses["user"]["invalidEmail"]:
         body = create_error(status, "email {{email}} is invalid", email=email)
     else:  # status == constants.statuses["user"]["emailUsed"]:
-        body = create_error(status, "email {{email}} is already registered", email=email)
+        body = create_error(
+            status, "email {{email}} is already registered", email=email
+        )
     return jsonify(body), http_status

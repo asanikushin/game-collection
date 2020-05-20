@@ -8,7 +8,10 @@ def check_id():
     file_id = request.args.get("file_id")
     if file_id is None:
         status = constants.statuses["request"]["badArguments"]
-        return jsonify(create_error(status, "One id must be specified")), constants.responses[status]
+        return (
+            jsonify(create_error(status, "One id must be specified")),
+            constants.responses[status],
+        )
 
     result, status = Storage.file_status(file_id)
     http_status = constants.responses[status]

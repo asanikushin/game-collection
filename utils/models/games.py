@@ -12,7 +12,7 @@ class Game(db.Model):
     max_players = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
-        return '<Game {} - {}: {}>'.format(self.id, self.category, self.name)
+        return "<Game {} - {}: {}>".format(self.id, self.category, self.name)
 
     def values_update(self, **options):
         self.name = options.get("name", self.name)
@@ -51,12 +51,12 @@ class Game(db.Model):
 
 
 class Rating(db.Model):
-    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), primary_key=True)
+    game_id = db.Column(db.Integer, db.ForeignKey("game.id"), primary_key=True)
     user_id = db.Column(db.Integer, primary_key=True)
     score = db.Column(db.FLOAT)
 
     def __repr__(self):
-        return '<Score {} - {}: {}>'.format(self.game_id, self.user_id, self.score)
+        return "<Score {} - {}: {}>".format(self.game_id, self.user_id, self.score)
 
     def values_update(self, options):
         self.score = options.get("score", self.score)

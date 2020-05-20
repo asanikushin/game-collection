@@ -41,7 +41,9 @@ class Storage:
 
     def confirm_user(self, token: str):
         try:
-            value = jwt.decode(token, current_app.config["TOKENS_SECRET"], algorithms=['HS256'])
+            value = jwt.decode(
+                token, current_app.config["TOKENS_SECRET"], algorithms=["HS256"]
+            )
         except (jwt.DecodeError, jwt.ExpiredSignatureError) as err:
             return err, statuses["tokens"]["invalidToken"]
         user = User.query.get(value["id"])
@@ -84,7 +86,9 @@ class Storage:
     @staticmethod
     def check_token(access_token: str):
         try:
-            value = jwt.decode(access_token, current_app.config["TOKENS_SECRET"], algorithms=['HS256'])
+            value = jwt.decode(
+                access_token, current_app.config["TOKENS_SECRET"], algorithms=["HS256"]
+            )
         except jwt.ExpiredSignatureError as err:
             return err, statuses["tokens"]["accessTokenExpired"]
         except jwt.DecodeError as err:
@@ -128,25 +132,40 @@ class Storage:
 
     @staticmethod
     def _create_confirm_link(user: User, time=datetime.datetime.utcnow()) -> str:
-        token = str(jwt.encode(
-            {"id": user.id, "exp": time + current_app.config["ACCESS_TOKEN_EXPIRATION"]},
-            current_app.config["TOKENS_SECRET"]))[2:-1]
+        token = jwt.encode(
+            {
+                "id": user.id,
+                "exp": time + current_app.config["ACCESS_TOKEN_EXPIRATION"],
+            },
+            current_app.config["TOKENS_SECRET"],
+        ).decode()
         return f"{current_app.config['CONFIRM_URL']}/confirm/{token}"
 
     def _send_confirm_message(self, user: User):
         if self._rabbit is None:
             self._init_rabbit_connection()
-        email = Email(user.email, "Conformation email", f"To confirm go to {Storage._create_confirm_link(user)}")
+        email = Email(
+            user.email,
+            "Conformation email",
+            f"To confirm go to {Storage._create_confirm_link(user)}",
+        )
         send_message(self._rabbit, current_app.config["QUEUE"], pickle.dumps(email))
         self._rabbit = None
 
     @staticmethod
-    def _create_tokens(email: str, session: Session, time=datetime.datetime.utcnow()) -> TOKEN_PAIR:
+    def _create_tokens(
+        email: str, session: Session, time=datetime.datetime.utcnow()
+    ) -> TOKEN_PAIR:
         refresh_token = secrets.token_hex(64)
-        access_token = str(jwt.encode(
-            {"email": email, "session": session.id, "user_id": session.userId,
-             "exp": time + current_app.config["ACCESS_TOKEN_EXPIRATION"]},
-            current_app.config["TOKENS_SECRET"]))[2:-1]
+        access_token = jwt.encode(
+            {
+                "email": email,
+                "session": session.id,
+                "user_id": session.userId,
+                "exp": time + current_app.config["ACCESS_TOKEN_EXPIRATION"],
+            },
+            current_app.config["TOKENS_SECRET"],
+        ).decode()
 
         return access_token, refresh_token
 
@@ -157,7 +176,9 @@ class Storage:
         now = datetime.datetime.utcnow()
         access_token, refresh_token = self._create_tokens(email, session, now)
         session.refreshToken = refresh_token
-        session.refreshTokenExpireAt = now + current_app.config["REFRESH_TOKEN_EXPIRATION"]
+        session.refreshTokenExpireAt = (
+            now + current_app.config["REFRESH_TOKEN_EXPIRATION"]
+        )
         self._db.session.commit()
         return access_token, refresh_token, statuses["tokens"]["created"]
 
@@ -166,4 +187,6 @@ class Storage:
         self._db.session.commit()
 
     def _init_rabbit_connection(self):
-        self._rabbit = wait_connection(current_app.config["RABBITMQ"], current_app.logger)
+        self._rabbit = wait_connection(
+            current_app.config["RABBITMQ"], current_app.logger
+        )

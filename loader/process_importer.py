@@ -48,7 +48,9 @@ def process_xml_file(file_id: str, app: Flask):
         process_any(file_id, app, tags_generator(), BatchElement.from_xml_element)
 
 
-def process_any(file_id: str, app: Flask, iterable: Iterable, converter: Callable, *args, **kwargs):
+def process_any(
+    file_id: str, app: Flask, iterable: Iterable, converter: Callable, *args, **kwargs
+):
     batch = BatchList()
     count = 0
     with app.app_context():
