@@ -4,17 +4,19 @@ from typing import Dict, Optional, List, Any
 from validate_email import validate_email
 
 
-def check_keys(base: Dict[str, Any], *keys, strict=True) -> bool:
+def check_keys(base: Dict[str, Any], *keys: str, strict=True) -> bool:
     keys = set(keys)
-    base = set(base.keys())
-    intersect = base.intersection(keys)
+    data = set(base.keys())
+    intersect = data.intersection(keys)
     if strict:
         return len(intersect) == len(keys)
     else:
         return intersect != set()
 
 
-def check_model_options(operation: Methods, options: Dict, cls, instance: object = None, service="game") -> STATUS:
+def check_model_options(
+    operation: Methods, options: Dict, cls, instance: object = None, service="game"
+) -> STATUS:
     must, other, constr = cls.get_fields()
     all_fields = set(must + other)
 
@@ -35,10 +37,12 @@ def check_model_options(operation: Methods, options: Dict, cls, instance: object
             return statuses["internal"]["correctModelData"]
         else:
             return statuses[service]["missingData"]
-    elif operation == Methods.PUT or operation == Methods.PATCH:
+    elif operation in (Methods.PUT, Methods.PATCH):
         if instance:
             for field in constr:
-                if (val := options.get(field, None)) is not None and val != getattr(instance, field):
+                if (val := options.get(field, None)) is not None and val != getattr(
+                    instance, field
+                ):
                     return statuses[service]["replacingData"]
         return statuses["internal"]["correctModelData"]
     else:

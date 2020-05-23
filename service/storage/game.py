@@ -4,7 +4,7 @@ from utils import check_model_options
 from utils.constants import statuses, Methods, MAX_ELEMENT_COUNT
 from utils.queues.models import BatchList
 
-from service.models import Game
+from utils.models.games import Game
 
 from service import db
 
@@ -50,7 +50,7 @@ class GameProcessor:
         self._db.session.commit()
         return game, statuses["game"]["deleted"]
 
-    def delete_all_games(self) -> typing.Tuple[int, STATUS]:
+    def delete_all_games(self) -> COUNT_WITH_STATUS:
         rows_deleted = self._db.session.query(Game).delete()
         self._db.session.commit()
         return rows_deleted, statuses["game"]["deleted"]
@@ -59,14 +59,16 @@ class GameProcessor:
         if (game := self._get_game(game_id)) is None:
             return None, statuses["game"]["notExists"]
 
-        correct = check_model_options(getattr(Methods, method), options, Game, game, service="game")
+        correct = check_model_options(
+            getattr(Methods, method), options, Game, game, service="game"
+        )
         if correct != statuses["internal"]["correctModelData"]:
             return None, correct
         game.values_update(**options)
         self._db.session.commit()
         return game, statuses["game"]["modified"]
 
-    def add_batch_list(self, batch: BatchList):
+    def add_batch_list(self, batch: BatchList) -> None:
         for element in batch.to_list():
             game = Game(**element.get_dict())
             self._db.session.add(game)

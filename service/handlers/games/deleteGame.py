@@ -6,7 +6,9 @@ from flask import jsonify, request, current_app
 
 def delete_game(prod_id=None):
     prod_id = prod_id or request.args.get("id")
-    current_app.logger.info(f"Deleting game by {request.environ['user_email']} and game id {prod_id}")
+    current_app.logger.info(
+        f"Deleting game by {request.environ['user_email']} and game id {prod_id}"
+    )
 
     game, status = Storage.delete_game(prod_id)
     http_status = constants.responses[status]

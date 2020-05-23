@@ -14,13 +14,8 @@ statuses: Dict[str, Dict[str, STATUS]] = {
         "extraFields": 34,
         "invalidData": 39,
     },
-    "internal": {
-        "correctModelData": 8,
-        "extraModelFields": 25,
-    },
-    "request": {
-        "badArguments": 9,
-    },
+    "internal": {"correctModelData": 8, "extraModelFields": 25,},
+    "request": {"badArguments": 9,},
     "user": {
         "created": 10,
         "emailUsed": 11,
@@ -55,9 +50,5 @@ statuses: Dict[str, Dict[str, STATUS]] = {
         "invalidGameId": 38,
         "invalidData": 40,
     },
-    "batch": {
-        "created": 41,
-        "notExists": 42,
-        "returned": 43,
-    }
+    "batch": {"created": 41, "notExists": 42, "returned": 43,},
 }

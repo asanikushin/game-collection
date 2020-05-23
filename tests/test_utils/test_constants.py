@@ -3,10 +3,10 @@ from utils.constants import responses, statuses
 import pytest
 
 
-@pytest.mark.parametrize("skip_statuses", [
-    {"internal"},
-    pytest.param(set(), marks=pytest.mark.xfail(strict=True))
-])
+@pytest.mark.parametrize(
+    "skip_statuses",
+    [{"internal"}, pytest.param(set(), marks=pytest.mark.xfail(strict=True))],
+)
 def test_http_status(skip_statuses):
     if skip_statuses is None:
         skip_statuses = set()

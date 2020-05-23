@@ -6,7 +6,9 @@ from flask import jsonify, request, current_app
 
 def patch_game(prod_id=None):
     prod_id = prod_id or request.args.get("id")
-    current_app.logger.info(f"Updating game by {request.environ['user_email']} and game id {prod_id}")
+    current_app.logger.info(
+        f"Updating game by {request.environ['user_email']} and game id {prod_id}"
+    )
 
     game, status = Storage.update_game(prod_id, request.method, **request.json)
     http_status = constants.responses[status]

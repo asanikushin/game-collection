@@ -13,9 +13,14 @@ def change_role():
         return jsonify(body), constants.responses[status]
     token = token.strip("Bearer ")
 
-    if (user_id := request.json.get("user_id")) is None or (role := request.json.get("role")) is None:
+    if (user_id := request.json.get("user_id")) is None or (
+        role := request.json.get("role")
+    ) is None:
         status = constants.statuses["user"]["missingData"]
-        return jsonify(create_error(status, "Not enough data to change role")), constants.responses[status]
+        return (
+            jsonify(create_error(status, "Not enough data to change role")),
+            constants.responses[status],
+        )
 
     status = Storage.change_role(token, user_id, role)
     http_status = constants.responses[status]

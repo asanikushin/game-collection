@@ -1,5 +1,7 @@
-from importer import db
 from sqlalchemy_utils import UUIDType
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 
 class Batch(db.Model):
@@ -8,7 +10,7 @@ class Batch(db.Model):
     lines = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
-        return '<Batch {} - {}: {}>'.format(self.file_id, self.lines, self.loaded)
+        return "<Batch {} - {}: {}>".format(self.file_id, self.lines, self.loaded)
 
     def values_update(self, options):
         self.loaded = options.get("loaded", self.loaded)

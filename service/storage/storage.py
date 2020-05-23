@@ -11,6 +11,7 @@ from utils.pb.import_pb2_grpc import ImportStub
 
 from flask import current_app
 import grpc
+from typing import Optional
 
 
 class Storage:
@@ -20,11 +21,11 @@ class Storage:
         self._db = db
 
         self.rpc_connection = None
-        self.load_stub = None
+        self.load_stub: Optional[ImportStub] = None
 
     def _init_rpc(self):
         self.rpc_connection = grpc.insecure_channel(current_app.config["IMPORTER_GRPC"])
-        self.load_stub = ImportStub(self.rpc_connection)
+        self.load_stub: ImportStub = ImportStub(self.rpc_connection)
 
     # Game handlers
     def add_game(self, name, **options) -> ID_WITH_STATUS:
@@ -44,7 +45,7 @@ class Storage:
         self.rating.delete_game_score(game_id)
         return result
 
-    def delete_all_games(self) -> typing.Tuple[int, STATUS]:
+    def delete_all_games(self) -> COUNT_WITH_STATUS:
         result = self.game.delete_all_games()
         self.rating.delete_all_scores()
         return result
@@ -52,7 +53,7 @@ class Storage:
     def update_game(self, game_id, method="PATCH", **options) -> GAME_WITH_STATUS:
         return self.game.update_game(game_id, method, **options)
 
-    def add_batch_list(self, batch: BatchList, file_id, lines, loaded=False):
+    def add_batch_list(self, batch: Optional[BatchList], file_id, lines, loaded=False):
         if batch is not None:
             self.game.add_batch_list(batch)
 
@@ -62,20 +63,20 @@ class Storage:
         self.load_stub.Load(request)
 
     # Rating handlers
-    def add_score(self, params) -> RAT_WITH_STATUS:
+    def add_score(self, params) -> RATING_WITH_STATUS:
         game, status = self.get_game(params.get("game_id"))
         if status != statuses["game"]["returned"]:
             return None, statuses["rating"]["invalidGameId"]
         return self.rating.add_score(params)
 
-    def delete_score(self, game_id: GAME_ID_TYPE, user_id) -> RAT_WITH_STATUS:
+    def delete_score(self, game_id: GAME_ID_TYPE, user_id) -> RATING_WITH_STATUS:
         return self.rating.delete_user_score(game_id, user_id)
 
-    def get_game_rating(self, game_id: GAME_ID_TYPE) -> RATING_WITH_STATUS:
+    def get_game_rating(self, game_id: GAME_ID_TYPE) -> RATING_VALUE_WITH_STATUS:
         return self.rating.get_game_rating(game_id)
 
-    def get_user_scores(self, user_id) -> RAT_WITH_STATUS:
+    def get_user_scores(self, user_id) -> RATING_WITH_STATUS:
         return self.rating.get_user_scores(user_id)
 
-    def update_score(self, params, method) -> RAT_WITH_STATUS:
+    def update_score(self, params, method) -> RATING_WITH_STATUS:
         return self.rating.update_score(params, method)

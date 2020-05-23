@@ -6,161 +6,237 @@ from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
 from google.protobuf import symbol_database as _symbol_database
+
 # @@protoc_insertion_point(imports)
 
 _sym_db = _symbol_database.Default()
 
 
-
-
 DESCRIPTOR = _descriptor.FileDescriptor(
-  name='utils/pb/auth.proto',
-  package='',
-  syntax='proto3',
-  serialized_options=None,
-  serialized_pb=b'\n\x13utils/pb/auth.proto\"\'\n\x0fValidateRequest\x12\x14\n\x0c\x61\x63\x63\x65ss_token\x18\x01 \x01(\t\"p\n\x10ValidateResponse\x12\x0e\n\x06status\x18\x01 \x01(\x04\x12\x0f\n\x07user_id\x18\x02 \x01(\x04\x12\x0f\n\x07session\x18\x03 \x01(\x04\x12\x0c\n\x04role\x18\x04 \x01(\t\x12\r\n\x05\x65mail\x18\x05 \x01(\t\x12\r\n\x05\x65rror\x18\x06 \x01(\t27\n\x04\x41uth\x12/\n\x08Validate\x12\x10.ValidateRequest\x1a\x11.ValidateResponseb\x06proto3'
+    name="utils/pb/auth.proto",
+    package="",
+    syntax="proto3",
+    serialized_options=None,
+    serialized_pb=b'\n\x13utils/pb/auth.proto"\'\n\x0fValidateRequest\x12\x14\n\x0c\x61\x63\x63\x65ss_token\x18\x01 \x01(\t"p\n\x10ValidateResponse\x12\x0e\n\x06status\x18\x01 \x01(\x04\x12\x0f\n\x07user_id\x18\x02 \x01(\x04\x12\x0f\n\x07session\x18\x03 \x01(\x04\x12\x0c\n\x04role\x18\x04 \x01(\t\x12\r\n\x05\x65mail\x18\x05 \x01(\t\x12\r\n\x05\x65rror\x18\x06 \x01(\t27\n\x04\x41uth\x12/\n\x08Validate\x12\x10.ValidateRequest\x1a\x11.ValidateResponseb\x06proto3',
 )
 
 
-
-
 _VALIDATEREQUEST = _descriptor.Descriptor(
-  name='ValidateRequest',
-  full_name='ValidateRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='access_token', full_name='ValidateRequest.access_token', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=23,
-  serialized_end=62,
+    name="ValidateRequest",
+    full_name="ValidateRequest",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="access_token",
+            full_name="ValidateRequest.access_token",
+            index=0,
+            number=1,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=23,
+    serialized_end=62,
 )
 
 
 _VALIDATERESPONSE = _descriptor.Descriptor(
-  name='ValidateResponse',
-  full_name='ValidateResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='status', full_name='ValidateResponse.status', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='user_id', full_name='ValidateResponse.user_id', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='session', full_name='ValidateResponse.session', index=2,
-      number=3, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='role', full_name='ValidateResponse.role', index=3,
-      number=4, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='email', full_name='ValidateResponse.email', index=4,
-      number=5, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='error', full_name='ValidateResponse.error', index=5,
-      number=6, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=64,
-  serialized_end=176,
+    name="ValidateResponse",
+    full_name="ValidateResponse",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="status",
+            full_name="ValidateResponse.status",
+            index=0,
+            number=1,
+            type=4,
+            cpp_type=4,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="user_id",
+            full_name="ValidateResponse.user_id",
+            index=1,
+            number=2,
+            type=4,
+            cpp_type=4,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="session",
+            full_name="ValidateResponse.session",
+            index=2,
+            number=3,
+            type=4,
+            cpp_type=4,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="role",
+            full_name="ValidateResponse.role",
+            index=3,
+            number=4,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="email",
+            full_name="ValidateResponse.email",
+            index=4,
+            number=5,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+        _descriptor.FieldDescriptor(
+            name="error",
+            full_name="ValidateResponse.error",
+            index=5,
+            number=6,
+            type=9,
+            cpp_type=9,
+            label=1,
+            has_default_value=False,
+            default_value=b"".decode("utf-8"),
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[],
+    serialized_start=64,
+    serialized_end=176,
 )
 
-DESCRIPTOR.message_types_by_name['ValidateRequest'] = _VALIDATEREQUEST
-DESCRIPTOR.message_types_by_name['ValidateResponse'] = _VALIDATERESPONSE
+DESCRIPTOR.message_types_by_name["ValidateRequest"] = _VALIDATEREQUEST
+DESCRIPTOR.message_types_by_name["ValidateResponse"] = _VALIDATERESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-ValidateRequest = _reflection.GeneratedProtocolMessageType('ValidateRequest', (_message.Message,), {
-  'DESCRIPTOR' : _VALIDATEREQUEST,
-  '__module__' : 'utils.pb.auth_pb2'
-  # @@protoc_insertion_point(class_scope:ValidateRequest)
-  })
+ValidateRequest = _reflection.GeneratedProtocolMessageType(
+    "ValidateRequest",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _VALIDATEREQUEST,
+        "__module__": "utils.pb.auth_pb2"
+        # @@protoc_insertion_point(class_scope:ValidateRequest)
+    },
+)
 _sym_db.RegisterMessage(ValidateRequest)
 
-ValidateResponse = _reflection.GeneratedProtocolMessageType('ValidateResponse', (_message.Message,), {
-  'DESCRIPTOR' : _VALIDATERESPONSE,
-  '__module__' : 'utils.pb.auth_pb2'
-  # @@protoc_insertion_point(class_scope:ValidateResponse)
-  })
+ValidateResponse = _reflection.GeneratedProtocolMessageType(
+    "ValidateResponse",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _VALIDATERESPONSE,
+        "__module__": "utils.pb.auth_pb2"
+        # @@protoc_insertion_point(class_scope:ValidateResponse)
+    },
+)
 _sym_db.RegisterMessage(ValidateResponse)
 
 
-
 _AUTH = _descriptor.ServiceDescriptor(
-  name='Auth',
-  full_name='Auth',
-  file=DESCRIPTOR,
-  index=0,
-  serialized_options=None,
-  serialized_start=178,
-  serialized_end=233,
-  methods=[
-  _descriptor.MethodDescriptor(
-    name='Validate',
-    full_name='Auth.Validate',
+    name="Auth",
+    full_name="Auth",
+    file=DESCRIPTOR,
     index=0,
-    containing_service=None,
-    input_type=_VALIDATEREQUEST,
-    output_type=_VALIDATERESPONSE,
     serialized_options=None,
-  ),
-])
+    serialized_start=178,
+    serialized_end=233,
+    methods=[
+        _descriptor.MethodDescriptor(
+            name="Validate",
+            full_name="Auth.Validate",
+            index=0,
+            containing_service=None,
+            input_type=_VALIDATEREQUEST,
+            output_type=_VALIDATERESPONSE,
+            serialized_options=None,
+        ),
+    ],
+)
 _sym_db.RegisterServiceDescriptor(_AUTH)
 
-DESCRIPTOR.services_by_name['Auth'] = _AUTH
+DESCRIPTOR.services_by_name["Auth"] = _AUTH
 
 # @@protoc_insertion_point(module_scope)

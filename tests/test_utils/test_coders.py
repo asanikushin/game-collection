@@ -19,9 +19,9 @@ def test_time_parser():
 
 def test_csv_parser():
     value = parse_csv_row("name,categories,min_players,max_players")
-    assert value == ['name', 'categories', 'min_players', 'max_players']
+    assert value == ["name", "categories", "min_players", "max_players"]
 
-    value = parse_csv_row("name,\"comma, row\"")
+    value = parse_csv_row('name,"comma, row"')
     assert value == ["name", "comma, row"]
 
     value = parse_csv_row("value")
